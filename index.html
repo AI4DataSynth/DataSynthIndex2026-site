@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="数据合成领域学者学术指数榜：看持续产出与对公开数据集、基准的贡献，不看头衔与经费。">
+<title>DataSynthIndex 2026 · 数据合成学者指数</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --ink:#1b1f24;
+  --ink-2:#48525c;
+  --muted:#6b7681;
+  --line:#e3e7eb;
+  --line-strong:#cbd2d8;
+  --surface:#ffffff;
+  --surface-2:#f7f8f9;
+  --hover:#f4f6f8;
+  --accent:#1d4ed8;
+  --bib:#1d4ed8;
+  --dom:#b45309;
+  --ok:#166534;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--surface);color:var(--ink);font:14px/1.55 var(--font);font-variant-numeric:tabular-nums}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(29,78,216,.28)}
+a:hover{border-bottom-color:var(--accent)}
+code{font-family:var(--mono)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.page{max-width:1180px;margin:0 auto;padding:44px 32px 64px}
+
+.masthead{padding-bottom:22px;border-bottom:1px solid var(--line)}
+.kicker{margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{margin:0;font-size:27px;line-height:1.25;font-weight:600;letter-spacing:.01em}
+h1 .sep{margin:0 .45em;color:var(--line-strong);font-weight:300}
+h1 .zh{font-weight:500;color:var(--ink-2)}
+.lede{margin:12px 0 0;max-width:66ch;color:var(--ink-2);font-size:14px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 26px;margin:18px 0 0;padding:0}
+.meta div{display:flex;align-items:baseline;gap:8px}
+.meta dt{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.meta dd{margin:0;font-size:12.5px;color:var(--ink-2)}
+
+.boards{display:flex;gap:28px;margin:26px 0 0;border-bottom:1px solid var(--line)}
+.tab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:8px 0 10px;font:inherit;font-size:14.5px;color:var(--muted);cursor:pointer;display:flex;align-items:baseline;gap:8px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+.tab .note{font-size:11px;color:var(--muted);font-weight:400;letter-spacing:.02em}
+
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin:18px 0 0}
+.search{position:relative;flex:0 0 300px;max-width:100%}
+.search input{width:100%;padding:8px 10px 8px 30px;border:1px solid var(--line-strong);border-radius:2px;background:var(--surface);font:inherit;font-size:13px;color:var(--ink)}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+.search svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted);pointer-events:none}
+.board-note{margin:0;font-size:12px;color:var(--muted);flex:1 1 320px;min-width:0}
+.count{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+.count b{font-weight:600;color:var(--ink-2)}
+.scroll-hint{display:none;margin:10px 0 0;font-size:11.5px;color:var(--muted)}
+
+.table-wrap{width:100%;margin-top:10px}
+table.lb{width:100%;border-collapse:collapse;font-size:13.5px}
+.lb thead th{position:sticky;top:0;z-index:2;background:var(--surface);text-align:left;font-weight:500;font-size:12px;color:var(--muted);letter-spacing:.02em;padding:9px 10px;border-bottom:1px solid var(--line-strong);white-space:nowrap}
+.lb thead th button{appearance:none;background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.lb thead th button:hover{color:var(--ink)}
+.lb thead th .arrow{font-size:9px;color:var(--line-strong);font-style:normal;line-height:1}
+.lb thead th[aria-sort="ascending"] button,
+.lb thead th[aria-sort="descending"] button{color:var(--ink);font-weight:600}
+.lb thead th[aria-sort="ascending"] .arrow,
+.lb thead th[aria-sort="descending"] .arrow{color:var(--ink)}
+.lb tbody td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.lb td.num,.lb th.num{text-align:right}
+.lb th.col-rank,.lb td.col-rank{text-align:center}
+.leader-row{cursor:pointer}
+.leader-row:hover td{background:var(--hover)}
+.is-self td{background:#f6f8ff}
+.is-self:hover td{background:#eef2ff}
+.is-self td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.is-open td{background:var(--hover)}
+
+.col-rank{width:46px;min-width:46px}
+.col-name{min-width:170px}
+.col-affil{width:152px}
+.col-score{width:84px}
+.col-bib,.col-dom{width:84px}
+.col-cites{width:80px}
+.col-h{width:62px}
+.col-share{width:82px}
+.col-asset{width:82px}
+.col-latest{width:196px}
+.latest-y{display:flex;gap:5px;align-items:center;font-size:10.5px;color:var(--muted);white-space:nowrap}
+.latest-venue{color:#3b4654;font-weight:600}
+.latest-t{font-size:12px;color:#3b4654;line-height:1.35;margin-top:2px;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.latest-soon{font-size:9.5px;line-height:1.5;padding:0 4px;border:1px solid rgba(180,83,9,.45);border-radius:2px;color:var(--dom);letter-spacing:.03em}
+.paper-latest{border-left:2px solid var(--dom);padding:2px 0 2px 10px;margin-bottom:14px}
+.paper-latest .tag{font-size:10.5px;color:var(--muted);letter-spacing:.03em;margin-bottom:3px}
+.tier{font-size:10px;line-height:1.6;padding:0 4px;border:1px solid #d8dee5;border-radius:2px;color:#5a6673}
+.col-conf{width:76px}
+.col-expand{width:34px;padding-left:0;padding-right:8px}
+
+.nm{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.nm-zh{font-weight:600;color:var(--ink);font-size:14px;white-space:nowrap}
+.nm-en{font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap}
+.tag-self{font-size:10.5px;line-height:1.6;padding:0 5px;border:1px solid rgba(29,78,216,.45);border-radius:2px;color:var(--accent);letter-spacing:.04em;white-space:nowrap}
+.rank{color:var(--muted);font-size:12.5px}
+.is-self .rank{color:var(--ink-2)}
+.affil{color:var(--ink-2);font-size:12.5px}
+.score{font-weight:600}
+.fam{color:var(--ink-2)}
+.sw{display:inline-block;width:6px;height:6px;border-radius:1px;margin-right:6px;vertical-align:1px;flex:0 0 auto}
+.sw-bib{background:var(--bib)}
+.sw-dom{background:var(--dom)}
+.conf{display:inline-block;font-size:11px;padding:1px 6px;border:1px solid var(--line-strong);border-radius:2px;color:var(--ink-2);white-space:nowrap}
+.conf-high{color:var(--ok);border-color:rgba(22,101,52,.35)}
+.conf-low{color:var(--muted);border-style:dashed}
+.expand{appearance:none;background:none;border:1px solid transparent;width:22px;height:22px;border-radius:2px;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.expand .chev{display:inline-block;font-size:9px;line-height:1;transition:transform .12s ease;transform:rotate(-90deg)}
+.expand[aria-expanded="true"] .chev{transform:rotate(0deg)}
+.leader-row:hover .expand{color:var(--ink)}
+.expand:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+
+.detail-row td{padding:0;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.detail-inner{padding:16px 20px 18px;border-left:3px solid var(--line-strong)}
+.is-self + .detail-row .detail-inner{border-left-color:var(--accent)}
+.detail-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:28px}
+.detail-inner h4{margin:0 0 8px;font-size:12px;font-weight:600;color:var(--ink-2);letter-spacing:.03em}
+.detail-inner h4 .sub{font-weight:400;color:var(--muted);margin-left:6px;letter-spacing:0;font-size:11px}
+.sig-panel{display:none}
+body[data-board="overall"] .sig-panel[data-board="overall"]{display:block}
+body[data-board="recent"] .sig-panel[data-board="recent"]{display:block}
+.sig-head,.sig-line{display:grid;grid-template-columns:minmax(100px,1.05fr) minmax(110px,1.75fr) 58px 44px 54px;gap:10px;align-items:center}
+.sig-head{padding-bottom:5px;border-bottom:1px solid var(--line-strong);font-size:10.5px;letter-spacing:.06em;color:var(--muted)}
+.sig-line{padding:5px 0;border-bottom:1px dashed var(--line);font-size:12px}
+.sig-line:last-child{border-bottom:0}
+.r{text-align:right}
+.sig-name{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-2);min-width:0}
+.sig-name span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sig-bar{display:grid;grid-template-columns:1fr 34px;gap:8px;align-items:center}
+.track{height:7px;background:#e9edf1;border-radius:1px;overflow:hidden;display:block}
+.fill{display:block;height:100%;border-radius:1px}
+.fill.bib{background:var(--bib)}
+.fill.dom{background:var(--dom)}
+.pct{font-size:11px;color:var(--ink-2);text-align:right}
+.sig-num{font-size:12px;color:var(--ink);text-align:right;white-space:nowrap}
+
+.paper{display:grid;grid-template-columns:1fr auto;gap:1px 12px;padding:6px 0;border-bottom:1px solid var(--line)}
+.paper:first-of-type{padding-top:0}
+.paper:last-of-type{border-bottom:0}
+.paper .t{font-size:12.5px;color:var(--ink);line-height:1.45}
+.paper .cites{font-size:11.5px;color:var(--ink-2);white-space:nowrap;text-align:right}
+.paper .pmeta{grid-column:1/-1;font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px}
+.paper .pmeta .dot{color:var(--line-strong)}
+.kind{font-size:10px;border:1px solid var(--line-strong);border-radius:2px;padding:0 4px;color:var(--ink-2);line-height:1.5}
+.profile{margin:10px 0 0;font-size:11.5px;color:var(--muted)}
+.muted{color:var(--muted);font-size:12px;margin:4px 0 0}
+
+.method{margin-top:46px;padding-top:26px;border-top:1px solid var(--line-strong)}
+.method h2{margin:0;font-size:17px;font-weight:600}
+.method-lede{margin:8px 0 20px;color:var(--ink-2);max-width:74ch}
+.weight-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+table.weights{width:100%;border-collapse:collapse;font-size:12.5px}
+.weights caption{text-align:left;font-size:12px;color:var(--ink-2);font-weight:600;padding:0 0 6px}
+.weights th{text-align:left;font-weight:500;font-size:10.5px;letter-spacing:.05em;color:var(--muted);padding:4px 8px 4px 0;border-bottom:1px solid var(--line-strong);white-space:nowrap}
+.weights td{padding:4px 8px 4px 0;border-bottom:1px solid var(--line);color:var(--ink-2)}
+.weights td.w,.weights th.w{text-align:right}
+.weights td.w{color:var(--ink)}
+.weights td.fam{white-space:nowrap}
+.weights tr.total td{border-bottom:0;color:var(--ink);font-weight:600}
+.weights .sig-label{color:var(--ink)}
+.weights .sig-key{font-size:10.5px;color:var(--muted);margin-left:6px}
+
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:16px 28px;margin:24px 0 0}
+.notes div{border-top:1px solid var(--line);padding-top:8px}
+.notes dt{font-size:11px;color:var(--muted);letter-spacing:.05em}
+.notes dd{margin:4px 0 0;font-size:12.5px;color:var(--ink-2);line-height:1.6}
+
+.colophon{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.7}
+.colophon p{margin:0 0 4px}
+.colophon .k{color:var(--ink-2)}
+.colophon code{font-size:11.5px;color:var(--ink-2)}
+.disclaimer{margin-top:14px;padding:10px 14px;border-left:2px solid var(--line-strong);background:var(--surface-2);color:var(--ink-2);font-size:12.5px}
+
+.empty{padding:44px 8px;text-align:center;color:var(--muted);font-size:13px;border-bottom:1px solid var(--line)}
+.empty strong{display:block;color:var(--ink-2);font-weight:500;margin-bottom:4px}
+
+@media (max-width:900px){
+  .page{padding:26px 16px 48px}
+  h1{font-size:22px}
+  .meta{gap:4px 18px}
+  .boards{gap:20px}
+  .toolbar{gap:10px}
+  .search{flex:1 1 220px}
+  .count{margin-left:0}
+  .scroll-hint{display:block}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;contain:paint;
+    -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 20px),transparent 100%);
+    mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 20px),transparent 100%)}
+  table.lb{min-width:960px}
+  .lb thead th{position:static}
+  .lb th.col-rank,.lb td.col-rank{position:sticky;left:0;z-index:2;background:var(--surface)}
+  .lb th.col-name,.lb td.col-name{position:sticky;left:46px;z-index:2;background:var(--surface);box-shadow:8px 0 8px -8px rgba(27,31,36,.16)}
+  .lb thead th.col-rank,.lb thead th.col-name{z-index:4}
+  .leader-row:hover td.col-rank,.leader-row:hover td.col-name{background:var(--hover)}
+  .is-self td.col-rank,.is-self td.col-name{background:#f6f8ff}
+  .is-self:hover td.col-rank,.is-self:hover td.col-name{background:#eef2ff}
+  .is-open td.col-rank,.is-open td.col-name{background:var(--hover)}
+  .detail-inner{position:sticky;left:0;width:calc(100vw - 32px);max-width:calc(100vw - 32px)}
+  .detail-grid{grid-template-columns:minmax(0,1fr);gap:20px}
+  .sig-head,.sig-line{grid-template-columns:minmax(84px,1fr) minmax(84px,1.5fr) 50px 38px 46px;gap:8px}
+  .weight-grid{grid-template-columns:minmax(0,1fr);gap:20px}
+}
+@media (max-width:520px){
+  h1{font-size:21px;line-height:1.35}
+  h1 .sep{display:none}
+  h1 .zh{display:block;font-size:17px;font-weight:500;margin-top:3px}
+  .weights .sig-key{display:none}
+  .sig-head,.sig-line{grid-template-columns:minmax(76px,1fr) minmax(70px,1.4fr) 46px 34px 42px;gap:6px}
+  .sig-name{font-size:11.5px}
+  .sig-num{font-size:11px}
+}
+@media print{
+  @page{margin:16mm}
+  .page{max-width:none;padding:0}
+  .boards,.toolbar,.col-expand,.expand,.count,.scroll-hint{display:none !important}
+  .table-wrap{overflow:visible}
+  table.lb{min-width:0;table-layout:fixed;width:100%;font-size:11.5px}
+  .lb thead th{position:static;padding:5px 6px;font-size:10px;white-space:normal}
+  .lb thead th .arrow{display:none}
+  .lb tbody td{padding:5px 6px}
+  .lb .col-rank{width:40px;min-width:0}
+  .lb .col-name{width:140px;min-width:0}
+  .lb .col-affil{width:108px}
+  .lb .col-score,.lb .col-bib,.lb .col-dom{width:64px}
+  .lb .col-cites{width:56px}
+  .lb .col-h{width:50px}
+  .lb .col-share,.lb .col-asset{width:60px}
+  .lb .col-latest{width:150px}
+  .lb .col-conf{width:64px}
+  .nm-zh,.nm-en,.tag-self{white-space:normal}
+  .lb th.col-rank,.lb td.col-rank,.lb th.col-name,.lb td.col-name{position:static;box-shadow:none}
+  .detail-inner{position:static;width:auto;max-width:none}
+  tr{break-inside:avoid}
+  .leader-row{cursor:auto}
+  .weight-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  .notes{grid-template-columns:repeat(3,minmax(0,1fr))}
+  a{color:inherit;border-bottom:0}
+  .method{margin-top:28px}
+}
+</style>
+</head>
+<body data-board="overall">
+<div class="page">
+
+  <header class="masthead">
+    <p class="kicker">Academic Index · 2026 Edition</p>
+    <h1>DataSynthIndex 2026<span class="sep">/</span><span class="zh">数据合成学者指数</span></h1>
+    <p class="lede">衡量在数据合成方向持续产出、并对公开数据集与基准有可查贡献的学者；不衡量头衔、经费规模与短期热度。</p>
+    <dl class="meta">
+      <div><dt>版本</dt><dd>2026 版</dd></div>
+      <div><dt>参考年</dt><dd>2026</dd></div>
+      <div><dt>近五年窗口</dt><dd>2022–2026</dd></div>
+      <div><dt>生成时间</dt><dd title="2026-11-14T00:08:42+08:00">2026-11-14 00:08</dd></div>
+      <div><dt>候选池</dt><dd>21 人</dd></div>
+    </dl>
+  </header>
+
+  <div class="boards" role="tablist" aria-label="榜单">
+    <button class="tab" type="button" role="tab" data-board="overall" aria-selected="true" id="tab-overall" aria-controls="board-panel">总榜<span class="note">全生涯</span></button>
+    <button class="tab" type="button" role="tab" data-board="recent" aria-selected="false" id="tab-recent" aria-controls="board-panel" tabindex="-1">近五年活跃榜<span class="note">2022–2026</span></button>
+  </div>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="4.6"/><path d="M10.4 10.4 14 14" stroke-linecap="round"/></svg>
+      <input id="q" type="search" autocomplete="off" placeholder="按姓名或机构筛选" aria-label="按姓名或机构筛选">
+    </div>
+    <p class="board-note" id="boardNote">总榜：全生涯口径，排名、综合分与两族分值都按全部发表记录计算。</p>
+    <p class="count" id="count">—</p>
+  </div>
+
+  <p class="scroll-hint">表格可横向滑动查看全部指标；排名与姓名列保持可见。</p>
+
+  <div class="table-wrap" id="board-panel" role="tabpanel" aria-labelledby="tab-overall">
+    <table class="lb">
+      <caption class="sr-only">数据合成学者指数：名次、姓名、机构、综合分、文献计量分、领域分、总引用、h-index、领域占比、资产被引与可信度。</caption>
+      <thead>
+        <tr>
+          <th class="col-rank" data-sort="rank" aria-sort="none"><button type="button">排名<i class="arrow">↕</i></button></th>
+          <th class="col-name" data-sort="name" aria-sort="none"><button type="button">姓名<i class="arrow">↕</i></button></th>
+          <th class="col-affil" data-sort="affil" aria-sort="none"><button type="button">机构<i class="arrow">↕</i></button></th>
+          <th class="col-score num" data-sort="score" aria-sort="descending"><button type="button">综合分<i class="arrow">↓</i></button></th>
+          <th class="col-bib num" data-sort="bib" aria-sort="none"><button type="button">文献计量分<i class="arrow">↕</i></button></th>
+          <th class="col-dom num" data-sort="dom" aria-sort="none"><button type="button">领域分<i class="arrow">↕</i></button></th>
+          <th class="col-cites num" data-sort="citations" aria-sort="none"><button type="button">总引用<i class="arrow">↕</i></button></th>
+          <th class="col-h num" data-sort="hindex" aria-sort="none"><button type="button">h-index<i class="arrow">↕</i></button></th>
+          <th class="col-share num" data-sort="share" aria-sort="none"><button type="button">领域占比<i class="arrow">↕</i></button></th>
+          <th class="col-asset num" data-sort="asset" aria-sort="none"><button type="button">资产被引<i class="arrow">↕</i></button></th>
+          <th class="col-latest" data-sort="latest" aria-sort="none"><button type="button">最近一篇<i class="arrow">↕</i></button></th>
+          <th class="col-conf" data-sort="confidence" aria-sort="none"><button type="button">可信度<i class="arrow">↕</i></button></th>
+          <th class="col-expand"><span class="sr-only">展开</span></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty" id="empty" hidden></div>
+  </div>
+
+  <noscript><p class="empty">页面需要 JavaScript 才能排序与展开；完整数据见 <code>data/leaderboard.json</code>。</p></noscript>
+
+  <section class="method" id="method" aria-labelledby="method-title">
+    <h2 id="method-title">方法摘要</h2>
+    <p class="method-lede">综合分只表示在本候选池中的相对位置：每个信号先在池内取百分位，再按权重加权求和并乘 100。换一届候选池，分数不可直接比较。</p>
+    <div class="weight-grid">
+      <table class="weights" id="weights-overall">
+        <caption>总榜（7 个信号）</caption>
+        <thead><tr><th>信号</th><th>族</th><th>变换</th><th class="w">权重</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <table class="weights" id="weights-recent">
+        <caption>近五年活跃榜（5 个信号）</caption>
+        <thead><tr><th>信号</th><th>族</th><th>变换</th><th class="w">权重</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <dl class="notes">
+      <div><dt>归一化</dt><dd id="note-normalization">信号先按配置做变换（log1p / sqrt / identity），再取池内百分位；max_rank 口径，并列者同分。</dd></div>
+      <div><dt>近五年窗口</dt><dd id="note-window">按论文发表年份计，含窗口两端。</dd></div>
+      <div><dt>可信度</dt><dd id="note-confidence">仅提示样本量，不改变分数。</dd></div>
+      <div><dt>署名折算</dt><dd id="note-authorship">引用与篇数按署名位置折算后再计入。</dd></div>
+      <div><dt>资产被引</dt><dd>人工清单（data/manual/assets.yaml）匹配到的数据集与基准，加上标题自动判为数据集/基准的论文；按该学者在文中的折算份额计入，两处不重复计。</dd></div>
+      <div><dt>榜单边界</dt><dd>候选池由固定名单与种子论文（data/seed/papers.yaml）作者共同圈定；固定名单含数据合成方向学者与指定对照学者。领域类信号按数据合成的口径计算，跨方向比较时只有文献计量部分同尺度。</dd></div>
+    </dl>
+  </section>
+
+  <footer class="colophon">
+    <p><span class="k">数据来源</span> <span id="sources">—</span></p>
+    <p><span class="k">生成时间</span> <span id="generated">2026-11-14 00:08</span> · <span class="k">配置哈希</span> <code id="hash">88fe34bfc7ff</code></p>
+    <p class="disclaimer" id="disclaimer">仅用于领域观察与自我校准，不作为招聘、晋升、考核等人事决策依据。</p>
+  </footer>
+
+</div>
+
+<script id="payload" type="application/json">{"meta":{"edition":2026,"reference_year":2026,"generated_at":"2026-11-14T00:08:42+08:00","recent_window":[2022,2026],"cohort_size":21,"config_hash":"88fe34bfc7ff","sources":{"openalex":"ok","dblp":"local: verified XML","semantic_scholar":"pending"},"weights":{"overall":{"citations_total":0.2,"citations_recent":0.15,"h_index":0.15,"mean_citations":0.1,"domain_share":0.08,"venue_points":0.1,"asset_citations":0.22},"recent":{"citations_recent":0.4,"works_recent":0.15,"h_index_recent":0.15,"venue_points_recent":0.15,"domain_share_recent":0.15}},"signals":{"overall":{"citations_total":{"weight":0.2,"family":"bibliometric","transform":"log1p"},"citations_recent":{"weight":0.15,"family":"bibliometric","transform":"log1p"},"h_index":{"weight":0.15,"family":"bibliometric","transform":"identity"},"mean_citations":{"weight":0.1,"family":"bibliometric","transform":"log1p"},"domain_share":{"weight":0.08,"family":"domain","transform":"identity"},"venue_points":{"weight":0.1,"family":"domain","transform":"sqrt"},"asset_citations":{"weight":0.22,"family":"domain","transform":"log1p"}},"recent":{"citations_recent":{"weight":0.4,"family":"bibliometric","transform":"log1p"},"works_recent":{"weight":0.15,"family":"bibliometric","transform":"log1p"},"h_index_recent":{"weight":0.15,"family":"bibliometric","transform":"identity"},"venue_points_recent":{"weight":0.15,"family":"domain","transform":"sqrt"},"domain_share_recent":{"weight":0.15,"family":"domain","transform":"identity"}}},"disclaimer":"仅用于领域观察与自我校准，不作为招聘、晋升、考核等人事决策依据。","normalization":{"method":"max_rank","ties":"average"},"confidence":{"high_min_works":15,"medium_min_works":8},"authorship":{"first_share":0.4,"last_share":0.35,"middle_pool":0.25,"first_share_two":0.6},"top_papers_per_scholar":5},"scholars":[{"key":"jianfeng-gao-a5114910293","name":"Jianfeng Gao","name_zh":null,"affiliation":"Microsoft (United States)","is_self":false,"confidence":"high","ids":{"openalex":"A5114910293","dblp":null,"s2":null},"rank":1,"rank_recent":2,"score":86.7143,"score_recent":80.0,"family_scores":{"bibliometric":90.873,"domain":80.4762},"family_scores_recent":{"bibliometric":90.82,"domain":54.76},"metrics":{"works":423,"works_recent":118,"citations_total":10611,"citations_recent":3281,"h_index":101,"h_index_recent":49,"mean_citations":134.3995,"credit_works":97.2732,"credit_citations":10611.2526,"domain_works":5,"domain_credit":1.4278,"domain_share":0.0147,"domain_share_recent":0.0133,"venue_points":99.7885,"venue_points_recent":26.2912,"top_venue_papers":90,"asset_papers":11,"asset_citations":152,"first_last_works":213,"first_last_share":0.8425},"signals":{"citations_total":{"raw":10611,"transformed":9.2697,"percentile":0.9762,"weight":0.2,"contribution":19.5238,"family":"bibliometric"},"citations_recent":{"raw":3281,"transformed":8.0962,"percentile":0.9286,"weight":0.15,"contribution":13.9286,"family":"bibliometric"},"h_index":{"raw":101,"transformed":101,"percentile":0.9762,"weight":0.15,"contribution":14.6429,"family":"bibliometric"},"mean_citations":{"raw":134.3995,"transformed":4.9082,"percentile":0.6429,"weight":0.1,"contribution":6.4286,"family":"bibliometric"},"domain_share":{"raw":0.0147,"transformed":0.0147,"percentile":0.5,"weight":0.08,"contribution":4,"family":"domain"},"venue_points":{"raw":99.7885,"transformed":9.9894,"percentile":0.881,"weight":0.1,"contribution":8.8095,"family":"domain"},"asset_citations":{"raw":152,"transformed":5.0304,"percentile":0.881,"weight":0.22,"contribution":19.381,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":3281,"transformed":8.0962,"percentile":0.9286,"weight":0.4,"contribution":37.1429,"family":"bibliometric"},"works_recent":{"raw":118,"transformed":4.7791,"percentile":0.8333,"weight":0.15,"contribution":12.5,"family":"bibliometric"},"h_index_recent":{"raw":49,"transformed":49,"percentile":0.9286,"weight":0.15,"contribution":13.9286,"family":"bibliometric"},"venue_points_recent":{"raw":26.2912,"transformed":5.1275,"percentile":0.8333,"weight":0.15,"contribution":12.5,"family":"domain"},"domain_share_recent":{"raw":0.0133,"transformed":0.0133,"percentile":0.2619,"weight":0.15,"contribution":3.9286,"family":"domain"}},"top_papers":[{"title":"Domain-Specific Language Model Pretraining for Biomedical Natural Language Processing","year":2021,"venue":"ACM Transactions on Computing for Healthcare","citations":2649,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.1145/3458754"},{"title":"MS MARCO: A Human Generated MAchine Reading COmprehension Dataset.","year":2016,"venue":"neural information processing systems","citations":2538,"credit":0.0192,"kind":"dataset","doi":"https://doi.org/10.48550/arxiv.1611.09268"},{"title":"A Diversity-Promoting Objective Function for Neural Conversation Models","year":2016,"venue":"Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (NAACL-HLT)","citations":2479,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.18653/v1/n16-1014"},{"title":"Deep Learning--based Text Classification: A Comprehensive Review","year":2021,"venue":"ACM Computing Surveys","citations":2126,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.1145/3439726"},{"title":"DEBERTA: DECODING-ENHANCED BERT WITH DISENTANGLED ATTENTION","year":2021,"venue":"International Conference on Learning Representations","citations":2078,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2006.03654"}],"recent_top_papers":[{"title":"LLaVA-Med: Training a Large Language-and-Vision Assistant for Biomedicine in One Day","year":2023,"venue":"neural information processing systems","citations":1128,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.52202/075280-1240","tier":"A"},{"title":"Segment Everything Everywhere All at Once","year":2023,"venue":"neural information processing systems","citations":565,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.52202/075280-0868","tier":"A"},{"title":"A Multimodal Biomedical Foundation Model Trained from Fifteen Million Image–Text Pairs","year":2024,"venue":"NEJM AI","citations":395,"credit":0.0114,"kind":"paper","doi":"https://doi.org/10.1056/aioa2400640","tier":"A"},{"title":"Chameleon: Plug-and-Play Compositional Reasoning with Large Language Models","year":2023,"venue":"neural information processing systems","citations":362,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.52202/075280-1882","tier":"A"},{"title":"Focal Modulation Networks","year":2022,"venue":"neural information processing systems","citations":330,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.52202/068431-0304","tier":"A"}],"latest_paper":{"title":"SynthAgent: Adapting Web Agents with Synthetic Supervision","year":2026,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":13,"credit":0.025,"kind":"paper","doi":"https://doi.org/10.18653/v1/2026.acl-long.716","tier":"A","upcoming":false}},{"key":"hannaneh-hajishirzi-a5082305994","name":"Hannaneh Hajishirzi","name_zh":null,"affiliation":"University of Washington","is_self":false,"confidence":"high","ids":{"openalex":"A5082305994","dblp":null,"s2":null},"rank":2,"rank_recent":1,"score":84.0476,"score_recent":87.619,"family_scores":{"bibliometric":89.2857,"domain":76.1905},"family_scores_recent":{"bibliometric":95.58,"domain":69.05},"metrics":{"works":261,"works_recent":129,"citations_total":9250,"citations_recent":4916,"h_index":88,"h_index_recent":55,"mean_citations":159.1111,"credit_works":57.1042,"credit_citations":9250.145,"domain_works":6,"domain_credit":1.4333,"domain_share":0.0251,"domain_share_recent":0.0447,"venue_points":62.3643,"venue_points_recent":28.1869,"top_venue_papers":56,"asset_papers":12,"asset_citations":108,"first_last_works":126,"first_last_share":0.8169},"signals":{"citations_total":{"raw":9250,"transformed":9.1325,"percentile":0.881,"weight":0.2,"contribution":17.619,"family":"bibliometric"},"citations_recent":{"raw":4916,"transformed":8.5005,"percentile":0.9762,"weight":0.15,"contribution":14.6429,"family":"bibliometric"},"h_index":{"raw":88,"transformed":88,"percentile":0.9286,"weight":0.15,"contribution":13.9286,"family":"bibliometric"},"mean_citations":{"raw":159.1111,"transformed":5.0759,"percentile":0.7381,"weight":0.1,"contribution":7.381,"family":"bibliometric"},"domain_share":{"raw":0.0251,"transformed":0.0251,"percentile":0.5952,"weight":0.08,"contribution":4.7619,"family":"domain"},"venue_points":{"raw":62.3643,"transformed":7.8971,"percentile":0.7381,"weight":0.1,"contribution":7.381,"family":"domain"},"asset_citations":{"raw":108,"transformed":4.6913,"percentile":0.8333,"weight":0.22,"contribution":18.3333,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":4916,"transformed":8.5005,"percentile":0.9762,"weight":0.4,"contribution":39.0476,"family":"bibliometric"},"works_recent":{"raw":129,"transformed":4.8675,"percentile":0.881,"weight":0.15,"contribution":13.2143,"family":"bibliometric"},"h_index_recent":{"raw":55,"transformed":55,"percentile":0.9762,"weight":0.15,"contribution":14.6429,"family":"bibliometric"},"venue_points_recent":{"raw":28.1869,"transformed":5.3091,"percentile":0.881,"weight":0.15,"contribution":13.2143,"family":"domain"},"domain_share_recent":{"raw":0.0447,"transformed":0.0447,"percentile":0.5,"weight":0.15,"contribution":7.5,"family":"domain"}},"top_papers":[{"title":"Self-Instruct: Aligning Language Models with Self-Generated Instructions","year":2023,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":2481,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.18653/v1/2023.acl-long.754"},{"title":"Beyond the Imitation Game: Quantifying and extrapolating the capabilities of language models","year":2022,"venue":"arXiv (Cornell University)","citations":2049,"credit":null,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2206.04615"},{"title":"Bidirectional Attention Flow for Machine Comprehension","year":2016,"venue":"arXiv (Cornell University)","citations":1721,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.1611.01603"},{"title":"Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?","year":2022,"venue":"Conference on Empirical Methods in Natural Language Processing (EMNLP)","citations":1483,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.18653/v1/2022.emnlp-main.759"},{"title":"s1: Simple test-time scaling","year":2025,"venue":"Conference on Empirical Methods in Natural Language Processing (EMNLP)","citations":1423,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.18653/v1/2025.emnlp-main.1025"}],"recent_top_papers":[{"title":"Self-Instruct: Aligning Language Models with Self-Generated Instructions","year":2023,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":2481,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.18653/v1/2023.acl-long.754","tier":"A"},{"title":"When Not to Trust Language Models: Investigating Effectiveness of Parametric and Non-Parametric Memories","year":2023,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":972,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.18653/v1/2023.acl-long.546","tier":"A"},{"title":"Molmo and PixMo: Open Weights and Open Data for State-of-the-Art Vision-Language Models","year":2025,"venue":"IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings","citations":607,"credit":0.0052,"kind":"paper","doi":"https://doi.org/10.1109/cvpr52734.2025.00018","tier":"A"},{"title":"OLMo: Accelerating the Science of Language Models","year":2024,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":556,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.18653/v1/2024.acl-long.841","tier":"A"},{"title":"Cross-Task Generalization via Natural Language Crowdsourcing Instructions","year":2022,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":550,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.18653/v1/2022.acl-long.244","tier":"A"}],"latest_paper":{"title":"Small Reward Models via Backward Inference","year":2026,"venue":"Conference on Empirical Methods in Natural Language Processing (EMNLP)","citations":2,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.18653/2026.emnlp-main.2629","tier":"B","upcoming":false}},{"key":"omer-levy-a5024311574","name":"Omer Levy","name_zh":null,"affiliation":"Tel Aviv University","is_self":false,"confidence":"high","ids":{"openalex":"A5024311574","dblp":null,"s2":null},"rank":3,"rank_recent":9,"score":83.1905,"score_recent":60.7143,"family_scores":{"bibliometric":86.9048,"domain":77.619},"family_scores_recent":{"bibliometric":64.28,"domain":52.38},"metrics":{"works":97,"works_recent":28,"citations_total":9362,"citations_recent":946,"h_index":55,"h_index_recent":19,"mean_citations":833.8866,"credit_works":25.8524,"credit_citations":9361.5964,"domain_works":1,"domain_credit":0.35,"domain_share":0.0135,"domain_share_recent":0.0557,"venue_points":26.5559,"venue_points_recent":6.5392,"top_venue_papers":19,"asset_papers":8,"asset_citations":776,"first_last_works":49,"first_last_share":0.7891},"signals":{"citations_total":{"raw":9362,"transformed":9.1445,"percentile":0.9286,"weight":0.2,"contribution":18.5714,"family":"bibliometric"},"citations_recent":{"raw":946,"transformed":6.8533,"percentile":0.7857,"weight":0.15,"contribution":11.7857,"family":"bibliometric"},"h_index":{"raw":55,"transformed":55,"percentile":0.8333,"weight":0.15,"contribution":12.5,"family":"bibliometric"},"mean_citations":{"raw":833.8866,"transformed":6.7273,"percentile":0.9286,"weight":0.1,"contribution":9.2857,"family":"bibliometric"},"domain_share":{"raw":0.0135,"transformed":0.0135,"percentile":0.4524,"weight":0.08,"contribution":3.619,"family":"domain"},"venue_points":{"raw":26.5559,"transformed":5.1532,"percentile":0.5952,"weight":0.1,"contribution":5.9524,"family":"domain"},"asset_citations":{"raw":776,"transformed":6.6554,"percentile":0.9762,"weight":0.22,"contribution":21.4762,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":946,"transformed":6.8533,"percentile":0.7857,"weight":0.4,"contribution":31.4286,"family":"bibliometric"},"works_recent":{"raw":28,"transformed":3.3673,"percentile":0.3571,"weight":0.15,"contribution":5.3571,"family":"bibliometric"},"h_index_recent":{"raw":19,"transformed":19,"percentile":0.5476,"weight":0.15,"contribution":8.2143,"family":"bibliometric"},"venue_points_recent":{"raw":6.5392,"transformed":2.5572,"percentile":0.5,"weight":0.15,"contribution":7.5,"family":"domain"},"domain_share_recent":{"raw":0.0557,"transformed":0.0557,"percentile":0.5476,"weight":0.15,"contribution":8.2143,"family":"domain"}},"top_papers":[{"title":"RoBERTa: A Robustly Optimized BERT Pretraining Approach","year":2019,"venue":"arXiv (Cornell University)","citations":33626,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.1907.11692"},{"title":"BART: Denoising Sequence-to-Sequence Pre-training for Natural Language Generation, Translation, and Comprehension","year":2020,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":11472,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.18653/v1/2020.acl-main.703"},{"title":"GLUE: A Multi-Task Benchmark and Analysis Platform for Natural Language Understanding","year":2018,"venue":"BlackboxNLP Workshop on Analyzing and Interpreting Neural Networks for NLP (BlackboxNLP)","citations":4974,"credit":0.0625,"kind":"benchmark","doi":"https://doi.org/10.18653/v1/w18-5446"},{"title":"GLUE: A Multi-Task Benchmark and Analysis Platform for Natural Language Understanding","year":2018,"venue":"arXiv (Cornell University)","citations":2982,"credit":0.0625,"kind":"benchmark","doi":"https://doi.org/10.48550/arxiv.1804.07461"},{"title":"Beyond the Imitation Game: Quantifying and extrapolating the capabilities of language models","year":2022,"venue":"arXiv (Cornell University)","citations":2049,"credit":null,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2206.04615"}],"recent_top_papers":[{"title":"LIMA: Less Is More for Alignment","year":2023,"venue":"neural information processing systems","citations":902,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.52202/075280-2400","tier":"A"},{"title":"Pick-a-Pic: An Open Dataset of User Preferences for Text-to-Image Generation","year":2023,"venue":"neural information processing systems","citations":436,"credit":0.35,"kind":"dataset","doi":"https://doi.org/10.52202/075280-1594","tier":"A"},{"title":"Unnatural Instructions: Tuning Language Models with (Almost) No Human Labor","year":2023,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":324,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.18653/v1/2023.acl-long.806","tier":"A"},{"title":"Instruction Induction: From Few Examples to Natural Language Task Descriptions","year":2023,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":160,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.18653/v1/2023.acl-long.108","tier":"A"},{"title":"Megalodon: Efficient LLM Pretraining and Inference with Unlimited Context Length","year":2024,"venue":"neural information processing systems","citations":41,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.52202/079017-2294","tier":"A"}],"latest_paper":{"title":"Keep Guessing? When Considering Inference Scaling, Mind the Baselines","year":2025,"venue":"Findings of the Association for Computational Linguistics: NAACL","citations":4,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.18653/v1/2025.findings-naacl.332","tier":"-","upcoming":false}},{"key":"yuanzhi-li-a5101879892","name":"Yuanzhi Li","name_zh":null,"affiliation":"Mohamed bin Zayed University of Artificial Intelligence","is_self":false,"confidence":"high","ids":{"openalex":"A5101879892","dblp":null,"s2":null},"rank":4,"rank_recent":3,"score":72.619,"score_recent":71.9048,"family_scores":{"bibliometric":82.9365,"domain":57.1429},"family_scores_recent":{"bibliometric":83.33,"domain":45.23},"metrics":{"works":149,"works_recent":74,"citations_total":4145,"citations_recent":1624,"h_index":51,"h_index_recent":32,"mean_citations":257.8389,"credit_works":42.1892,"credit_citations":4144.9685,"domain_works":1,"domain_credit":0.35,"domain_share":0.0083,"domain_share_recent":0.0197,"venue_points":12.2083,"venue_points_recent":8.125,"top_venue_papers":14,"asset_papers":5,"asset_citations":31,"first_last_works":77,"first_last_share":0.8308},"signals":{"citations_total":{"raw":4145,"transformed":8.3299,"percentile":0.8333,"weight":0.2,"contribution":16.6667,"family":"bibliometric"},"citations_recent":{"raw":1624,"transformed":7.3933,"percentile":0.8333,"weight":0.15,"contribution":12.5,"family":"bibliometric"},"h_index":{"raw":51,"transformed":51,"percentile":0.7857,"weight":0.15,"contribution":11.7857,"family":"bibliometric"},"mean_citations":{"raw":257.8389,"transformed":5.5562,"percentile":0.881,"weight":0.1,"contribution":8.8095,"family":"bibliometric"},"domain_share":{"raw":0.0083,"transformed":0.0083,"percentile":0.2619,"weight":0.08,"contribution":2.0952,"family":"domain"},"venue_points":{"raw":12.2083,"transformed":3.494,"percentile":0.4524,"weight":0.1,"contribution":4.5238,"family":"domain"},"asset_citations":{"raw":31,"transformed":3.4657,"percentile":0.7381,"weight":0.22,"contribution":16.2381,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":1624,"transformed":7.3933,"percentile":0.8333,"weight":0.4,"contribution":33.3333,"family":"bibliometric"},"works_recent":{"raw":74,"transformed":4.3175,"percentile":0.7857,"weight":0.15,"contribution":11.7857,"family":"bibliometric"},"h_index_recent":{"raw":32,"transformed":32,"percentile":0.881,"weight":0.15,"contribution":13.2143,"family":"bibliometric"},"venue_points_recent":{"raw":8.125,"transformed":2.8504,"percentile":0.5476,"weight":0.15,"contribution":8.2143,"family":"domain"},"domain_share_recent":{"raw":0.0197,"transformed":0.0197,"percentile":0.3571,"weight":0.15,"contribution":5.3571,"family":"domain"}},"top_papers":[{"title":"LoRA: Low-Rank Adaptation of Large Language Models","year":2021,"venue":"arXiv (Cornell University)","citations":14504,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2106.09685"},{"title":"Sparks of Artificial General Intelligence: Early experiments with GPT-4","year":2023,"venue":"arXiv (Cornell University)","citations":5535,"credit":0.0208,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2303.12712"},{"title":"Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone","year":2024,"venue":"arXiv (Cornell University)","citations":2674,"credit":0.0026,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2404.14219"},{"title":"OpenAI GPT-5 System Card","year":2025,"venue":"arXiv (Cornell University)","citations":2001,"credit":null,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2601.03267"},{"title":"Phi-4 Technical Report","year":2024,"venue":"arXiv (Cornell University)","citations":1605,"credit":0.01,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2412.08905"}],"recent_top_papers":[{"title":"Towards Understanding the Mixture-Of-Experts Layer in Deep Learning","year":2022,"venue":"neural information processing systems","citations":65,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.52202/068431-1675","tier":"A"},{"title":"The probability flow ODE is provably fast","year":2023,"venue":"neural information processing systems","citations":62,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.52202/075280-2998","tier":"A"},{"title":"Vision Transformers Provably Learn Spatial Structure","year":2022,"venue":"neural information processing systems","citations":28,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.52202/068431-2741","tier":"A"},{"title":"Read and Reap the Rewards: Learning to Play Atari with the Help of Instruction Manuals","year":2023,"venue":"neural information processing systems","citations":22,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.52202/075280-0048","tier":"A"},{"title":"The Mechanism of Prediction Head in Non-Contrastive Self-Supervised Learning","year":2022,"venue":"neural information processing systems","citations":21,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.52202/068431-1798","tier":"A"}],"latest_paper":{"title":"SCALAR: Learning and Composing Skills through LLM Guided Symbolic Planning and Deep RL Grounding","year":2026,"venue":"arXiv (Cornell University)","citations":8,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2603.09036","tier":"-","upcoming":false}},{"key":"guoliang-li","name":"Guoliang Li","name_zh":"李国良","affiliation":"Tsinghua University","is_self":false,"confidence":"high","ids":{"openalex":"A5100451576","dblp":null,"s2":null},"rank":5,"rank_recent":4,"score":68.7619,"score_recent":67.381,"family_scores":{"bibliometric":66.6667,"domain":71.9048},"family_scores_recent":{"bibliometric":71.77,"domain":57.15},"metrics":{"works":449,"works_recent":152,"citations_total":3579,"citations_recent":571,"h_index":72,"h_index_recent":31,"mean_citations":38.2316,"credit_works":96.9986,"credit_citations":3578.9294,"domain_works":5,"domain_credit":0.3542,"domain_share":0.0037,"domain_share_recent":0.0088,"venue_points":160.1327,"venue_points_recent":48.2027,"top_venue_papers":256,"asset_papers":9,"asset_citations":45,"first_last_works":166,"first_last_share":0.7227},"signals":{"citations_total":{"raw":3579,"transformed":8.1831,"percentile":0.7857,"weight":0.2,"contribution":15.7143,"family":"bibliometric"},"citations_recent":{"raw":571,"transformed":6.3491,"percentile":0.5952,"weight":0.15,"contribution":8.9286,"family":"bibliometric"},"h_index":{"raw":72,"transformed":72,"percentile":0.881,"weight":0.15,"contribution":13.2143,"family":"bibliometric"},"mean_citations":{"raw":38.2316,"transformed":3.6695,"percentile":0.2143,"weight":0.1,"contribution":2.1429,"family":"bibliometric"},"domain_share":{"raw":0.0037,"transformed":0.0037,"percentile":0.2143,"weight":0.08,"contribution":1.7143,"family":"domain"},"venue_points":{"raw":160.1327,"transformed":12.6544,"percentile":0.9762,"weight":0.1,"contribution":9.7619,"family":"domain"},"asset_citations":{"raw":45,"transformed":3.8286,"percentile":0.7857,"weight":0.22,"contribution":17.2857,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":571,"transformed":6.3491,"percentile":0.5952,"weight":0.4,"contribution":23.8095,"family":"bibliometric"},"works_recent":{"raw":152,"transformed":5.0304,"percentile":0.9286,"weight":0.15,"contribution":13.9286,"family":"bibliometric"},"h_index_recent":{"raw":31,"transformed":31,"percentile":0.8333,"weight":0.15,"contribution":12.5,"family":"bibliometric"},"venue_points_recent":{"raw":48.2027,"transformed":6.9428,"percentile":0.9286,"weight":0.15,"contribution":13.9286,"family":"domain"},"domain_share_recent":{"raw":0.0088,"transformed":0.0088,"percentile":0.2143,"weight":0.15,"contribution":3.2143,"family":"domain"}},"top_papers":[{"title":"Tool Learning with Foundation Models","year":2024,"venue":"ACM Computing Surveys","citations":544,"credit":0.0061,"kind":"paper","doi":"https://doi.org/10.1145/3704435"},{"title":"Truth inference in crowdsourcing: is the problem solved?","year":2017,"venue":"Proceedings of the VLDB Endowment","citations":434,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.14778/3055540.3055547"},{"title":"A Survey of Traffic Prediction: from Spatio-Temporal Data to Intelligent Transportation","year":2021,"venue":"Data Science and Engineering","citations":413,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1007/s41019-020-00151-z"},{"title":"EASE: an effective 3-in-1 keyword search method for unstructured, semi-structured and structured data","year":2008,"venue":"ACM SIGMOD International Conference on Management of Data (SIGMOD)","citations":384,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1145/1376616.1376706"},{"title":"An End-to-End Automatic Cloud Database Tuning System Using Deep Reinforcement Learning","year":2019,"venue":"ACM SIGMOD International Conference on Management of Data (SIGMOD)","citations":363,"credit":0.025,"kind":"paper","doi":"https://doi.org/10.1145/3299869.3300085"}],"recent_top_papers":[{"title":"Survey of vector database management systems","year":2024,"venue":"The VLDB Journal","citations":302,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.1007/s00778-024-00864-x","tier":"A"},{"title":"A Survey of Text-to-SQL in the Era of LLMs: Where Are We, and Where Are We Going?","year":2025,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":268,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2025.3592032","tier":"A"},{"title":"The Dawn of Natural Language to SQL: Are We Fully Ready?","year":2024,"venue":"Proceedings of the VLDB Endowment","citations":180,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.14778/3681954.3682003","tier":"A"},{"title":"D-Bot: Database Diagnosis System using Large Language Models","year":2024,"venue":"Proceedings of the VLDB Endowment","citations":112,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.14778/3675034.3675043","tier":"A"},{"title":"Learned Index: A Comprehensive Experimental Evaluation","year":2023,"venue":"Proceedings of the VLDB Endowment","citations":95,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.14778/3594512.3594528","tier":"A"}],"latest_paper":{"title":"PrepBench: How Far are We from Natural-Language-Driven Data Preparation?","year":2026,"venue":"Proceedings of the VLDB Endowment","citations":4,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.14778/3828612.3828638","tier":"A","upcoming":false}},{"key":"hyung-won-chung-a5051828575","name":"Hyung Won Chung","name_zh":null,"affiliation":"OpenAI (United States)","is_self":false,"confidence":"high","ids":{"openalex":"A5051828575","dblp":null,"s2":null},"rank":6,"rank_recent":7,"score":68.3571,"score_recent":61.6667,"family_scores":{"bibliometric":75.9921,"domain":56.9048},"family_scores_recent":{"bibliometric":67.69,"domain":47.62},"metrics":{"works":40,"works_recent":23,"citations_total":2169,"citations_recent":1948,"h_index":36,"h_index_recent":23,"mean_citations":1881.575,"credit_works":4.7839,"credit_citations":2169.132,"domain_works":4,"domain_credit":0.7917,"domain_share":0.1655,"domain_share_recent":0.3699,"venue_points":1.1631,"venue_points_recent":0.0357,"top_venue_papers":0,"asset_papers":1,"asset_citations":22,"first_last_works":8,"first_last_share":0.7839},"signals":{"citations_total":{"raw":2169,"transformed":7.6825,"percentile":0.7381,"weight":0.2,"contribution":14.7619,"family":"bibliometric"},"citations_recent":{"raw":1948,"transformed":7.5751,"percentile":0.881,"weight":0.15,"contribution":13.2143,"family":"bibliometric"},"h_index":{"raw":36,"transformed":36,"percentile":0.5238,"weight":0.15,"contribution":7.8571,"family":"bibliometric"},"mean_citations":{"raw":1881.575,"transformed":7.5404,"percentile":0.9762,"weight":0.1,"contribution":9.7619,"family":"bibliometric"},"domain_share":{"raw":0.1655,"transformed":0.1655,"percentile":0.9286,"weight":0.08,"contribution":7.4286,"family":"domain"},"venue_points":{"raw":1.1631,"transformed":1.0785,"percentile":0.119,"weight":0.1,"contribution":1.1905,"family":"domain"},"asset_citations":{"raw":22,"transformed":3.1355,"percentile":0.6429,"weight":0.22,"contribution":14.1429,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":1948,"transformed":7.5751,"percentile":0.881,"weight":0.4,"contribution":35.2381,"family":"bibliometric"},"works_recent":{"raw":23,"transformed":3.1781,"percentile":0.2143,"weight":0.15,"contribution":3.2143,"family":"bibliometric"},"h_index_recent":{"raw":23,"transformed":23,"percentile":0.5952,"weight":0.15,"contribution":8.9286,"family":"bibliometric"},"venue_points_recent":{"raw":0.0357,"transformed":0.189,"percentile":0.0238,"weight":0.15,"contribution":0.3571,"family":"domain"},"domain_share_recent":{"raw":0.3699,"transformed":0.3699,"percentile":0.9286,"weight":0.15,"contribution":13.9286,"family":"domain"}},"top_papers":[{"title":"GPT-4 Technical Report","year":2023,"venue":"arXiv (Cornell University)","citations":38329,"credit":0.0026,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2303.08774"},{"title":"GPT-4o System Card","year":2024,"venue":"arXiv (Cornell University)","citations":8884,"credit":null,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2410.21276"},{"title":"PaLM: Scaling Language Modeling with Pathways","year":2022,"venue":"arXiv (Cornell University)","citations":5424,"credit":0.0038,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2204.02311"},{"title":"Large language models encode clinical knowledge","year":2023,"venue":"Nature","citations":5320,"credit":0.0083,"kind":"paper","doi":"https://doi.org/10.1038/s41586-023-06291-2"},{"title":"Scaling Instruction-Finetuned Language Models","year":2022,"venue":"arXiv (Cornell University)","citations":3888,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2210.11416"}],"recent_top_papers":[{"title":"Transcending Scaling Laws with 0.1% Extra Compute","year":2023,"venue":"Conference on Empirical Methods in Natural Language Processing (EMNLP)","citations":95,"credit":0.0179,"kind":"paper","doi":"https://doi.org/10.18653/v1/2023.emnlp-main.91","tier":"B"},{"title":"GPT-4 Technical Report","year":2023,"venue":"arXiv (Cornell University)","citations":38329,"credit":0.0026,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2303.08774","tier":"-"},{"title":"GPT-4o System Card","year":2024,"venue":"arXiv (Cornell University)","citations":8884,"credit":null,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2410.21276","tier":"-"},{"title":"PaLM: Scaling Language Modeling with Pathways","year":2022,"venue":"arXiv (Cornell University)","citations":5424,"credit":0.0038,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2204.02311","tier":"-"},{"title":"Large language models encode clinical knowledge","year":2023,"venue":"Nature","citations":5320,"credit":0.0083,"kind":"paper","doi":"https://doi.org/10.1038/s41586-023-06291-2","tier":"-"}],"latest_paper":{"title":"BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents","year":2025,"venue":"arXiv (Cornell University)","citations":705,"credit":0.0312,"kind":"benchmark","doi":"https://doi.org/10.48550/arxiv.2504.12516","tier":"-","upcoming":false}},{"key":"shayne-longpre-a5001884064","name":"Shayne Longpre","name_zh":null,"affiliation":"Massachusetts Institute of Technology","is_self":false,"confidence":"high","ids":{"openalex":"A5001884064","dblp":null,"s2":null},"rank":7,"rank_recent":6,"score":63.4286,"score_recent":61.7857,"family_scores":{"bibliometric":54.7619,"domain":76.4286},"family_scores_recent":{"bibliometric":64.8,"domain":54.77},"metrics":{"works":64,"works_recent":51,"citations_total":1008,"citations_recent":744,"h_index":34,"h_index_recent":30,"mean_citations":191.0469,"credit_works":11.0233,"credit_citations":1008.1465,"domain_works":6,"domain_credit":1.5715,"domain_share":0.1426,"domain_share_recent":0.1033,"venue_points":5.6876,"venue_points_recent":2.9126,"top_venue_papers":11,"asset_papers":11,"asset_citations":167,"first_last_works":24,"first_last_share":0.8573},"signals":{"citations_total":{"raw":1008,"transformed":6.9167,"percentile":0.4048,"weight":0.2,"contribution":8.0952,"family":"bibliometric"},"citations_recent":{"raw":744,"transformed":6.6134,"percentile":0.6429,"weight":0.15,"contribution":9.6429,"family":"bibliometric"},"h_index":{"raw":34,"transformed":34,"percentile":0.4524,"weight":0.15,"contribution":6.7857,"family":"bibliometric"},"mean_citations":{"raw":191.0469,"transformed":5.2577,"percentile":0.8333,"weight":0.1,"contribution":8.3333,"family":"bibliometric"},"domain_share":{"raw":0.1426,"transformed":0.1426,"percentile":0.881,"weight":0.08,"contribution":7.0476,"family":"domain"},"venue_points":{"raw":5.6876,"transformed":2.3849,"percentile":0.3095,"weight":0.1,"contribution":3.0952,"family":"domain"},"asset_citations":{"raw":167,"transformed":5.124,"percentile":0.9286,"weight":0.22,"contribution":20.4286,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":744,"transformed":6.6134,"percentile":0.6429,"weight":0.4,"contribution":25.7143,"family":"bibliometric"},"works_recent":{"raw":51,"transformed":3.9512,"percentile":0.5238,"weight":0.15,"contribution":7.8571,"family":"bibliometric"},"h_index_recent":{"raw":30,"transformed":30,"percentile":0.7857,"weight":0.15,"contribution":11.7857,"family":"bibliometric"},"venue_points_recent":{"raw":2.9126,"transformed":1.7066,"percentile":0.4048,"weight":0.15,"contribution":6.0714,"family":"domain"},"domain_share_recent":{"raw":0.1033,"transformed":0.1033,"percentile":0.6905,"weight":0.15,"contribution":10.3571,"family":"domain"}},"top_papers":[{"title":"Scaling Instruction-Finetuned Language Models","year":2022,"venue":"arXiv (Cornell University)","citations":3888,"credit":0.0076,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2210.11416"},{"title":"BLOOM: A 176B-Parameter Open-Access Multilingual Language Model","year":2022,"venue":"arXiv (Cornell University)","citations":2857,"credit":null,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2211.05100"},{"title":"The Flan Collection: Designing Data and Methods for Effective Instruction Tuning","year":2023,"venue":"arXiv (Cornell University)","citations":553,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2301.13688"},{"title":"Prometheus 2: An Open Source Language Model Specialized in Evaluating Other Language Models","year":2024,"venue":"Conference on Empirical Methods in Natural Language Processing (EMNLP)","citations":429,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.18653/v1/2024.emnlp-main.248"},{"title":"Aya Model: An Instruction Finetuned Open-Access Multilingual Language Model","year":2024,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":326,"credit":0.0167,"kind":"paper","doi":"https://doi.org/10.18653/v1/2024.acl-long.845"}],"recent_top_papers":[{"title":"Aya Model: An Instruction Finetuned Open-Access Multilingual Language Model","year":2024,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":326,"credit":0.0167,"kind":"paper","doi":"https://doi.org/10.18653/v1/2024.acl-long.845","tier":"A"},{"title":"Global MMLU: Understanding and Addressing Cultural and Linguistic Biases in Multilingual Evaluation","year":2025,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":228,"credit":0.0119,"kind":"paper","doi":"https://doi.org/10.18653/v1/2025.acl-long.919","tier":"A"},{"title":"Consent in Crisis: The Rapid Decline of the AI Data Commons","year":2024,"venue":"neural information processing systems","citations":119,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.52202/079017-3431","tier":"A"},{"title":"The Leaderboard Illusion","year":2025,"venue":"neural information processing systems","citations":115,"credit":0.0227,"kind":"benchmark","doi":"https://doi.org/10.52202/085713-2620","tier":"A"},{"title":"Foundation Model Transparency Reports","year":2024,"venue":"Proceedings of the AAAI/ACM Conference on AI Ethics and Society","citations":83,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.1609/aies.v7i1.31628","tier":"A"}],"latest_paper":{"title":"The 2025 Foundation Model Transparency Index","year":2026,"venue":"SuperIntelligence - Robotics - Safety & Alignment","citations":40,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.70777/si.v2i4.17165","tier":"-","upcoming":false}},{"key":"baolin-peng-a5066404470","name":"Baolin Peng","name_zh":null,"affiliation":"Microsoft (United States)","is_self":false,"confidence":"high","ids":{"openalex":"A5066404470","dblp":null,"s2":null},"rank":8,"rank_recent":5,"score":62.8571,"score_recent":64.881,"family_scores":{"bibliometric":67.4603,"domain":55.9524},"family_scores_recent":{"bibliometric":73.3,"domain":45.24},"metrics":{"works":133,"works_recent":73,"citations_total":1609,"citations_recent":917,"h_index":43,"h_index_recent":28,"mean_citations":63.203,"credit_works":15.2522,"credit_citations":1608.9924,"domain_works":3,"domain_credit":1.2,"domain_share":0.0787,"domain_share_recent":0.082,"venue_points":12.1537,"venue_points_recent":2.0725,"top_venue_papers":21,"asset_papers":2,"asset_citations":17,"first_last_works":25,"first_last_share":0.6556},"signals":{"citations_total":{"raw":1609,"transformed":7.384,"percentile":0.6905,"weight":0.2,"contribution":13.8095,"family":"bibliometric"},"citations_recent":{"raw":917,"transformed":6.8222,"percentile":0.7381,"weight":0.15,"contribution":11.0714,"family":"bibliometric"},"h_index":{"raw":43,"transformed":43,"percentile":0.6429,"weight":0.15,"contribution":9.6429,"family":"bibliometric"},"mean_citations":{"raw":63.203,"transformed":4.1621,"percentile":0.5952,"weight":0.1,"contribution":5.9524,"family":"bibliometric"},"domain_share":{"raw":0.0787,"transformed":0.0787,"percentile":0.7857,"weight":0.08,"contribution":6.2857,"family":"domain"},"venue_points":{"raw":12.1537,"transformed":3.4862,"percentile":0.4048,"weight":0.1,"contribution":4.0476,"family":"domain"},"asset_citations":{"raw":17,"transformed":2.8904,"percentile":0.5476,"weight":0.22,"contribution":12.0476,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":917,"transformed":6.8222,"percentile":0.7381,"weight":0.4,"contribution":29.5238,"family":"bibliometric"},"works_recent":{"raw":73,"transformed":4.3041,"percentile":0.7381,"weight":0.15,"contribution":11.0714,"family":"bibliometric"},"h_index_recent":{"raw":28,"transformed":28,"percentile":0.7143,"weight":0.15,"contribution":10.7143,"family":"bibliometric"},"venue_points_recent":{"raw":2.0725,"transformed":1.4396,"percentile":0.2619,"weight":0.15,"contribution":3.9286,"family":"domain"},"domain_share_recent":{"raw":0.082,"transformed":0.082,"percentile":0.6429,"weight":0.15,"contribution":9.6429,"family":"domain"}},"top_papers":[{"title":"Instruction Tuning with GPT-4","year":2023,"venue":"arXiv (Cornell University)","citations":1330,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2304.03277"},{"title":"Check Your Facts and Try Again: Improving Large Language Models with External Knowledge and Automated Feedback","year":2023,"venue":"arXiv (Cornell University)","citations":601,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2302.12813"},{"title":"Chameleon: Plug-and-Play Compositional Reasoning with Large Language Models","year":2023,"venue":"neural information processing systems","citations":362,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.52202/075280-1882"},{"title":"Spoken language understanding using long short-term memory neural networks","year":2014,"venue":"IEEE Spoken Language Technology Workshop (SLT)","citations":336,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.1109/slt.2014.7078572"},{"title":"An Introduction to Computational Networks and the Computational Network Toolkit","year":2014,"venue":null,"citations":332,"credit":0.0096,"kind":"paper","doi":null}],"recent_top_papers":[{"title":"Chameleon: Plug-and-Play Compositional Reasoning with Large Language Models","year":2023,"venue":"neural information processing systems","citations":362,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.52202/075280-1882","tier":"A"},{"title":"Reinforcement Learning for Reasoning in Large Language Models with One Training Example","year":2025,"venue":"neural information processing systems","citations":299,"credit":0.0208,"kind":"paper","doi":"https://doi.org/10.52202/085713-4093","tier":"A"},{"title":"Magma: A Foundation Model for Multimodal AI Agents","year":2025,"venue":"IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings","citations":123,"credit":0.025,"kind":"paper","doi":"https://doi.org/10.1109/cvpr52734.2025.01325","tier":"A"},{"title":"GUI-Actor: Coordinate-Free Visual Grounding for GUI Agents","year":2025,"venue":"neural information processing systems","citations":102,"credit":0.0156,"kind":"paper","doi":"https://doi.org/10.52202/085713-0508","tier":"A"},{"title":"Toward Self-Improvement of LLMs via Imagination, Searching, and Criticizing","year":2024,"venue":"neural information processing systems","citations":87,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.52202/079017-1670","tier":"A"}],"latest_paper":{"title":"SynthAgent: Adapting Web Agents with Synthetic Supervision","year":2026,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":13,"credit":0.025,"kind":"paper","doi":"https://doi.org/10.18653/v1/2026.acl-long.716","tier":"A","upcoming":false}},{"key":"ahmed-hassan-awadallah-a5021000040","name":"Ahmed Hassan Awadallah","name_zh":null,"affiliation":"Microsoft (United States)","is_self":false,"confidence":"high","ids":{"openalex":"A5021000040","dblp":null,"s2":null},"rank":9,"rank_recent":8,"score":62.5476,"score_recent":61.1905,"family_scores":{"bibliometric":64.0873,"domain":60.2381},"family_scores_recent":{"bibliometric":68.03,"domain":45.24},"metrics":{"works":164,"works_recent":63,"citations_total":1395,"citations_recent":758,"h_index":45,"h_index_recent":26,"mean_citations":61.1463,"credit_works":31.846,"credit_citations":1395.0361,"domain_works":1,"domain_credit":0.35,"domain_share":0.011,"domain_share_recent":0.0388,"venue_points":32.471,"venue_points_recent":6.4321,"top_venue_papers":41,"asset_papers":8,"asset_citations":25,"first_last_works":60,"first_last_share":0.7332},"signals":{"citations_total":{"raw":1395,"transformed":7.2414,"percentile":0.5952,"weight":0.2,"contribution":11.9048,"family":"bibliometric"},"citations_recent":{"raw":758,"transformed":6.632,"percentile":0.6905,"weight":0.15,"contribution":10.3571,"family":"bibliometric"},"h_index":{"raw":45,"transformed":45,"percentile":0.7143,"weight":0.15,"contribution":10.7143,"family":"bibliometric"},"mean_citations":{"raw":61.1463,"transformed":4.1295,"percentile":0.5476,"weight":0.1,"contribution":5.4762,"family":"bibliometric"},"domain_share":{"raw":0.011,"transformed":0.011,"percentile":0.3095,"weight":0.08,"contribution":2.4762,"family":"domain"},"venue_points":{"raw":32.471,"transformed":5.6983,"percentile":0.6429,"weight":0.1,"contribution":6.4286,"family":"domain"},"asset_citations":{"raw":25,"transformed":3.2581,"percentile":0.6905,"weight":0.22,"contribution":15.1905,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":758,"transformed":6.632,"percentile":0.6905,"weight":0.4,"contribution":27.619,"family":"bibliometric"},"works_recent":{"raw":63,"transformed":4.1589,"percentile":0.6905,"weight":0.15,"contribution":10.3571,"family":"bibliometric"},"h_index_recent":{"raw":26,"transformed":26,"percentile":0.6429,"weight":0.15,"contribution":9.6429,"family":"bibliometric"},"venue_points_recent":{"raw":6.4321,"transformed":2.5362,"percentile":0.4524,"weight":0.15,"contribution":6.7857,"family":"domain"},"domain_share_recent":{"raw":0.0388,"transformed":0.0388,"percentile":0.4524,"weight":0.15,"contribution":6.7857,"family":"domain"}},"top_papers":[{"title":"Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone","year":2024,"venue":"arXiv (Cornell University)","citations":2674,"credit":0.0026,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2404.14219"},{"title":"Orca: Progressive Learning from Complex Explanation Traces of GPT-4","year":2023,"venue":"arXiv (Cornell University)","citations":622,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2306.02707"},{"title":"Magentic-One: A Generalist Multi-Agent System for Solving Complex Tasks","year":2024,"venue":"arXiv (Cornell University)","citations":347,"credit":0.0139,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2411.04468"},{"title":"QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization","year":2021,"venue":"Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (NAACL-HLT)","citations":320,"credit":0.0278,"kind":"benchmark","doi":"https://doi.org/10.18653/v1/2021.naacl-main.472"},{"title":"Hybrid LLM: Cost-Efficient and Quality-Aware Query Routing","year":2024,"venue":"arXiv (Cornell University)","citations":247,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2404.14618"}],"recent_top_papers":[{"title":"SummN: A Multi-Stage Summarization Framework for Long Input Dialogues and Documents: A Multi-Stage Summarization Framework for Long Input Dialogues and Documents","year":2022,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":54,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.18653/v1/2022.acl-long.112","tier":"A"},{"title":"Researchy Questions: A Dataset of Multi-Perspective, Decompositional Questions for Deep Research","year":2025,"venue":"International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR)","citations":50,"credit":0.0417,"kind":"dataset","doi":"https://doi.org/10.1145/3726302.3730275","tier":"A"},{"title":"The Principle of Diversity: Training Stronger Vision Transformers Calls for Reducing All Levels of Redundancy","year":2022,"venue":"IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings","citations":43,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.1109/cvpr52688.2022.01171","tier":"A"},{"title":"DYLE: Dynamic Latent Extraction for Abstractive Long-Input Summarization","year":2022,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":40,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.18653/v1/2022.acl-long.118","tier":"A"},{"title":"ADMoE: Anomaly Detection with Mixture-of-Experts from Noisy Labels","year":2023,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":36,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v37i4.25620","tier":"A"}],"latest_paper":{"title":"MEMENTO: Teaching LLMs to Manage Their Own Context","year":2026,"venue":"arXiv (Cornell University)","citations":21,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2604.09852","tier":"-","upcoming":false}},{"key":"yunjun-gao","name":"Yunjun Gao","name_zh":"高云君","affiliation":"Zhejiang University","is_self":false,"confidence":"high","ids":{"openalex":"A5006238145","dblp":null,"s2":null},"rank":10,"rank_recent":10,"score":47.1667,"score_recent":59.5238,"family_scores":{"bibliometric":47.0238,"domain":47.381},"family_scores_recent":{"bibliometric":62.08,"domain":53.57},"metrics":{"works":399,"works_recent":174,"citations_total":1337,"citations_recent":497,"h_index":45,"h_index_recent":28,"mean_citations":18.1855,"credit_works":86.1347,"credit_citations":1336.5616,"domain_works":0,"domain_credit":0,"domain_share":0,"domain_share_recent":0,"venue_points":121.6321,"venue_points_recent":72.7125,"top_venue_papers":207,"asset_papers":4,"asset_citations":7,"first_last_works":180,"first_last_share":0.815},"signals":{"citations_total":{"raw":1337,"transformed":7.1989,"percentile":0.5,"weight":0.2,"contribution":10,"family":"bibliometric"},"citations_recent":{"raw":497,"transformed":6.2106,"percentile":0.4524,"weight":0.15,"contribution":6.7857,"family":"bibliometric"},"h_index":{"raw":45,"transformed":45,"percentile":0.7143,"weight":0.15,"contribution":10.7143,"family":"bibliometric"},"mean_citations":{"raw":18.1855,"transformed":2.9542,"percentile":0.0714,"weight":0.1,"contribution":0.7143,"family":"bibliometric"},"domain_share":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.08,"contribution":0.7619,"family":"domain"},"venue_points":{"raw":121.6321,"transformed":11.0287,"percentile":0.9286,"weight":0.1,"contribution":9.2857,"family":"domain"},"asset_citations":{"raw":7,"transformed":2.0794,"percentile":0.4048,"weight":0.22,"contribution":8.9048,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":497,"transformed":6.2106,"percentile":0.4524,"weight":0.4,"contribution":18.0952,"family":"bibliometric"},"works_recent":{"raw":174,"transformed":5.1648,"percentile":0.9762,"weight":0.15,"contribution":14.6429,"family":"bibliometric"},"h_index_recent":{"raw":28,"transformed":28,"percentile":0.7143,"weight":0.15,"contribution":10.7143,"family":"bibliometric"},"venue_points_recent":{"raw":72.7125,"transformed":8.5272,"percentile":0.9762,"weight":0.15,"contribution":14.6429,"family":"domain"},"domain_share_recent":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.15,"contribution":1.4286,"family":"domain"}},"top_papers":[{"title":"C3: Zero-shot Text-to-SQL with ChatGPT","year":2023,"venue":"arXiv (Cornell University)","citations":292,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2307.07306"},{"title":"Generative Semi-supervised Learning for Multivariate Time Series Imputation","year":2021,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":221,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v35i10.17086"},{"title":"Manipulation in digital word-of-mouth: A reality check for book reviews","year":2010,"venue":"Decision Support Systems","citations":146,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.1016/j.dss.2010.08.013"},{"title":"MetaKG: Meta-Learning on Knowledge Graph for Cold-Start Recommendation","year":2022,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":122,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2022.3168775"},{"title":"UlTraMan: a unified platform for big trajectory data management and analytics","year":2018,"venue":"Proceedings of the VLDB Endowment","citations":114,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.14778/3192965.3192970"}],"recent_top_papers":[{"title":"MetaKG: Meta-Learning on Knowledge Graph for Cold-Start Recommendation","year":2022,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":122,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2022.3168775","tier":"A"},{"title":"An Experimental Survey of Missing Data Imputation Algorithms","year":2022,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":112,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2022.3186498","tier":"A"},{"title":"Spatio-Temporal Trajectory Similarity Measures: A Comprehensive Survey and Quantitative Study","year":2023,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":94,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2023.3323535","tier":"A"},{"title":"Self-Guided Learning to Denoise for Robust Recommendation","year":2022,"venue":"International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR)","citations":92,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1145/3477495.3532059","tier":"A"},{"title":"LDPTrace: Locally Differentially Private Trajectory Synthesis","year":2023,"venue":"Proceedings of the VLDB Endowment","citations":89,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.14778/3594512.3594520","tier":"A"}],"latest_paper":{"title":"Trajectory Data Management and Mining: A Survey From Deep Learning to the LLM Era","year":2026,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":87,"credit":0.0208,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2026.3719144","tier":"A","upcoming":false}},{"key":"subhabrata-mukherjee-a5103853262","name":"Subhabrata Mukherjee","name_zh":null,"affiliation":"Carnegie Mellon University","is_self":false,"confidence":"high","ids":{"openalex":"A5103853262","dblp":null,"s2":null},"rank":11,"rank_recent":14,"score":41.8571,"score_recent":40,"family_scores":{"bibliometric":39.2857,"domain":45.7143},"family_scores_recent":{"bibliometric":37.75,"domain":45.23},"metrics":{"works":105,"works_recent":36,"citations_total":1094,"citations_recent":357,"h_index":32,"h_index_recent":15,"mean_citations":46.1429,"credit_works":31.6501,"credit_citations":1094.0915,"domain_works":1,"domain_credit":0.4,"domain_share":0.0126,"domain_share_recent":0.076,"venue_points":25.6685,"venue_points_recent":2.3018,"top_venue_papers":24,"asset_papers":4,"asset_citations":12,"first_last_works":55,"first_last_share":0.8768},"signals":{"citations_total":{"raw":1094,"transformed":6.9985,"percentile":0.4524,"weight":0.2,"contribution":9.0476,"family":"bibliometric"},"citations_recent":{"raw":357,"transformed":5.8805,"percentile":0.3571,"weight":0.15,"contribution":5.3571,"family":"bibliometric"},"h_index":{"raw":32,"transformed":32,"percentile":0.4048,"weight":0.15,"contribution":6.0714,"family":"bibliometric"},"mean_citations":{"raw":46.1429,"transformed":3.8532,"percentile":0.3095,"weight":0.1,"contribution":3.0952,"family":"bibliometric"},"domain_share":{"raw":0.0126,"transformed":0.0126,"percentile":0.3571,"weight":0.08,"contribution":2.8571,"family":"domain"},"venue_points":{"raw":25.6685,"transformed":5.0664,"percentile":0.5476,"weight":0.1,"contribution":5.4762,"family":"domain"},"asset_citations":{"raw":12,"transformed":2.5649,"percentile":0.4524,"weight":0.22,"contribution":9.9524,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":357,"transformed":5.8805,"percentile":0.3571,"weight":0.4,"contribution":14.2857,"family":"bibliometric"},"works_recent":{"raw":36,"transformed":3.6109,"percentile":0.4048,"weight":0.15,"contribution":6.0714,"family":"bibliometric"},"h_index_recent":{"raw":15,"transformed":15,"percentile":0.4048,"weight":0.15,"contribution":6.0714,"family":"bibliometric"},"venue_points_recent":{"raw":2.3018,"transformed":1.5172,"percentile":0.3095,"weight":0.15,"contribution":4.6429,"family":"domain"},"domain_share_recent":{"raw":0.076,"transformed":0.076,"percentile":0.5952,"weight":0.15,"contribution":8.9286,"family":"domain"}},"top_papers":[{"title":"Orca: Progressive Learning from Complex Explanation Traces of GPT-4","year":2023,"venue":"arXiv (Cornell University)","citations":622,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2306.02707"},{"title":"DeClarE: Debunking Fake News and False Claims using Evidence-Aware Deep Learning","year":2018,"venue":"Conference on Empirical Methods in Natural Language Processing (EMNLP)","citations":414,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.18653/v1/d18-1003"},{"title":"Retrieval-Augmented Generation with Graphs (GraphRAG)","year":2024,"venue":"arXiv (Cornell University)","citations":391,"credit":0.0156,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2501.00309"},{"title":"Hybrid LLM: Cost-Efficient and Quality-Aware Query Routing","year":2024,"venue":"arXiv (Cornell University)","citations":247,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2404.14618"},{"title":"Where the Truth Lies: Explaining the Credibility of Emerging Claims on the Web and Social Media","year":2017,"venue":"International World Wide Web Conference (WWW)","citations":232,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.1145/3041021.3055133"}],"recent_top_papers":[{"title":"Accelerating Dataset Distillation via Model Augmentation","year":2023,"venue":"IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings","citations":49,"credit":0.0357,"kind":"dataset","doi":"https://doi.org/10.1109/cvpr52729.2023.01150","tier":"A"},{"title":"ADMoE: Anomaly Detection with Mixture-of-Experts from Noisy Labels","year":2023,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":36,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v37i4.25620","tier":"A"},{"title":"Robustness Challenges in Model Distillation and Pruning for Natural Language Understanding","year":2023,"venue":"Conference of the European Chapter of the Association for Computational Linguistics","citations":32,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.18653/v1/2023.eacl-main.129","tier":"A"},{"title":"A Systematic Study of Knowledge Distillation for Natural Language Generation with Pseudo-Target Training","year":2023,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":15,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.18653/v1/2023.acl-long.818","tier":"A"},{"title":"LiteTransformerSearch: Training-Free Neural Architecture Search for Efficient Language Models","year":2022,"venue":"neural information processing systems","citations":15,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.52202/068431-1761","tier":"A"}],"latest_paper":{"title":"HEART: A Unified Benchmark for Assessing Humans and LLMs in Emotional Support Dialogue","year":2026,"venue":"arXiv (Cornell University)","citations":16,"credit":0.35,"kind":"benchmark","doi":"https://doi.org/10.48550/arxiv.2601.19922","tier":"-","upcoming":false}},{"key":"hongxia-jin-a5044205212","name":"Hongxia Jin","name_zh":null,"affiliation":"Tianjin University","is_self":false,"confidence":"high","ids":{"openalex":"A5044205212","dblp":null,"s2":null},"rank":12,"rank_recent":11,"score":41.6429,"score_recent":47.2619,"family_scores":{"bibliometric":46.627,"domain":34.1667},"family_scores_recent":{"bibliometric":43.03,"domain":57.15},"metrics":{"works":246,"works_recent":53,"citations_total":1564,"citations_recent":399,"h_index":36,"h_index_recent":14,"mean_citations":24.4065,"credit_works":90.8628,"credit_citations":1564.3821,"domain_works":5,"domain_credit":1.1938,"domain_share":0.0131,"domain_share_recent":0.0216,"venue_points":65.9458,"venue_points_recent":18.3583,"top_venue_papers":37,"asset_papers":2,"asset_citations":0,"first_last_works":195,"first_last_share":0.9399},"signals":{"citations_total":{"raw":1564,"transformed":7.3556,"percentile":0.6429,"weight":0.2,"contribution":12.8571,"family":"bibliometric"},"citations_recent":{"raw":399,"transformed":5.9915,"percentile":0.4048,"weight":0.15,"contribution":6.0714,"family":"bibliometric"},"h_index":{"raw":36,"transformed":36,"percentile":0.5238,"weight":0.15,"contribution":7.8571,"family":"bibliometric"},"mean_citations":{"raw":24.4065,"transformed":3.235,"percentile":0.119,"weight":0.1,"contribution":1.1905,"family":"bibliometric"},"domain_share":{"raw":0.0131,"transformed":0.0131,"percentile":0.4048,"weight":0.08,"contribution":3.2381,"family":"domain"},"venue_points":{"raw":65.9458,"transformed":8.1207,"percentile":0.8333,"weight":0.1,"contribution":8.3333,"family":"domain"},"asset_citations":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.22,"contribution":2.0952,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":399,"transformed":5.9915,"percentile":0.4048,"weight":0.4,"contribution":16.1905,"family":"bibliometric"},"works_recent":{"raw":53,"transformed":3.989,"percentile":0.5952,"weight":0.15,"contribution":8.9286,"family":"bibliometric"},"h_index_recent":{"raw":14,"transformed":14,"percentile":0.3333,"weight":0.15,"contribution":5,"family":"bibliometric"},"venue_points_recent":{"raw":18.3583,"transformed":4.2847,"percentile":0.7381,"weight":0.15,"contribution":11.0714,"family":"domain"},"domain_share_recent":{"raw":0.0216,"transformed":0.0216,"percentile":0.4048,"weight":0.15,"contribution":6.0714,"family":"domain"}},"top_papers":[{"title":"Generalized ODIN: Detecting Out-of-Distribution Image Without Learning From Out-of-Distribution Data","year":2020,"venue":"IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings","citations":533,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.1109/cvpr42600.2020.01096"},{"title":"Generalizing DTW to the multi-dimensional case requires an adaptive approach","year":2016,"venue":"Data Mining and Knowledge Discovery","citations":342,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.1007/s10618-016-0455-0"},{"title":"AlpaGasus: Training A Better Alpaca with Fewer Data","year":2023,"venue":"arXiv (Cornell University)","citations":332,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2307.08701"},{"title":"Taking a HINT: Leveraging Explanations to Make Vision and Language Models More Grounded","year":2019,"venue":"IEEE/CVF International Conference on Computer Vision (ICCV)","citations":263,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.1109/iccv.2019.00268"},{"title":"A Bi-Model Based RNN Semantic Frame Parsing Model for Intent Detection and Slot Filling","year":2018,"venue":"Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (NAACL-HLT)","citations":216,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.18653/v1/n18-2050"}],"recent_top_papers":[{"title":"ISEEQ: Information Seeking Question Generation Using Dynamic Meta-Information Retrieval and Knowledge Graphs","year":2022,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":58,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v36i10.21312","tier":"A"},{"title":"DISP-LLM: Dimension-Independent Structural Pruning for Large Language Models","year":2024,"venue":"neural information processing systems","citations":26,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.52202/079017-2305","tier":"A"},{"title":"GOHSP: A Unified Framework of Graph and Optimization-Based Heterogeneous Structured Pruning for Vision Transformer","year":2023,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":16,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v37i9.26298","tier":"A"},{"title":"Text-Based Interactive Recommendation via Offline Reinforcement Learning","year":2022,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":11,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v36i10.21424","tier":"A"},{"title":"Improving Zero-Shot Phrase Grounding via Reasoning on External Knowledge and Spatial Relations","year":2022,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":11,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v36i2.20123","tier":"A"}],"latest_paper":{"title":"Fine-Grained Prototype Adaptation for Few-Shot Document-Level Relation Extraction","year":2026,"venue":"International Joint Conference on Neural Networks (IJCNN)","citations":0,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1109/ijcnn69854.2026.11729877","tier":"-","upcoming":false}},{"key":"lei-zou","name":"Lei Zou","name_zh":"邹磊","affiliation":"Peking University","is_self":false,"confidence":"high","ids":{"openalex":"A5033785339","dblp":null,"s2":null},"rank":13,"rank_recent":17,"score":36.6667,"score_recent":29.7619,"family_scores":{"bibliometric":38.8889,"domain":33.3333},"family_scores_recent":{"bibliometric":23.64,"domain":44.05},"metrics":{"works":197,"works_recent":58,"citations_total":1360,"citations_recent":166,"h_index":37,"h_index_recent":10,"mean_citations":26.7563,"credit_works":47.6896,"credit_citations":1359.6856,"domain_works":0,"domain_credit":0,"domain_share":0,"domain_share_recent":0,"venue_points":62.5124,"venue_points_recent":24.027,"top_venue_papers":81,"asset_papers":2,"asset_citations":2,"first_last_works":87,"first_last_share":0.7182},"signals":{"citations_total":{"raw":1360,"transformed":7.216,"percentile":0.5476,"weight":0.2,"contribution":10.9524,"family":"bibliometric"},"citations_recent":{"raw":166,"transformed":5.118,"percentile":0.119,"weight":0.15,"contribution":1.7857,"family":"bibliometric"},"h_index":{"raw":37,"transformed":37,"percentile":0.5952,"weight":0.15,"contribution":8.9286,"family":"bibliometric"},"mean_citations":{"raw":26.7563,"transformed":3.3235,"percentile":0.1667,"weight":0.1,"contribution":1.6667,"family":"bibliometric"},"domain_share":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.08,"contribution":0.7619,"family":"domain"},"venue_points":{"raw":62.5124,"transformed":7.9065,"percentile":0.7857,"weight":0.1,"contribution":7.8571,"family":"domain"},"asset_citations":{"raw":2,"transformed":1.0986,"percentile":0.2143,"weight":0.22,"contribution":4.7143,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":166,"transformed":5.118,"percentile":0.119,"weight":0.4,"contribution":4.7619,"family":"bibliometric"},"works_recent":{"raw":58,"transformed":4.0775,"percentile":0.6429,"weight":0.15,"contribution":9.6429,"family":"bibliometric"},"h_index_recent":{"raw":10,"transformed":10,"percentile":0.1429,"weight":0.15,"contribution":2.1429,"family":"bibliometric"},"venue_points_recent":{"raw":24.027,"transformed":4.9017,"percentile":0.7857,"weight":0.15,"contribution":11.7857,"family":"domain"},"domain_share_recent":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.15,"contribution":1.4286,"family":"domain"}},"top_papers":[{"title":"k-automorphism: a general framework for privacy preserving network publication","year":2009,"venue":"Proceedings of the VLDB Endowment","citations":413,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.14778/1687627.1687734"},{"title":"Answering Natural Language Questions by Subgraph Matching over Knowledge Graphs","year":2017,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":284,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2017.2766634"},{"title":"gStore: answering SPARQL queries via subgraph matching","year":2011,"venue":"Proceedings of the VLDB Endowment","citations":276,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.14778/2002974.2002976"},{"title":"Natural language question answering over RDF: a graph data driven approach","year":2014,"venue":"ACM SIGMOD International Conference on Management of Data (SIGMOD)","citations":244,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1145/2588555.2610525"},{"title":"gStore: a graph-based SPARQL query engine","year":2013,"venue":"The VLDB Journal","citations":209,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1007/s00778-013-0337-7"}],"recent_top_papers":[{"title":"Knowledge Graph Quality Management: a Comprehensive Survey","year":2022,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":158,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2022.3150080","tier":"A"},{"title":"GraphMM: Graph-Based Vehicular Map Matching by Leveraging Trajectory and Road Correlations","year":2023,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":37,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2023.3287739","tier":"A"},{"title":"Graph Stream Sketch: Summarizing Graph Streams With High Speed and Accuracy","year":2022,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":21,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2022.3174570","tier":"A"},{"title":"NewSP: A New Search Process for Continuous Subgraph Matching over Dynamic Graphs","year":2024,"venue":"IEEE International Conference on Data Engineering (ICDE)","citations":17,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.1109/icde60146.2024.00257","tier":"A"},{"title":"Evaluating Knowledge Graph Accuracy Powered by Optimized Human-machine Collaboration","year":2022,"venue":"ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD)","citations":15,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.1145/3534678.3539233","tier":"A"}],"latest_paper":{"title":"Efficient Cloud-Edge Collaborative Approaches to Sparql Queries Over Large RDF Graphs","year":2026,"venue":"IEEE International Conference on Data Engineering (ICDE)","citations":1,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.1109/icde65706.2026.00113","tier":"A","upcoming":false}},{"key":"vaishaal-shankar-a5112327867","name":"Vaishaal Shankar","name_zh":null,"affiliation":"Anthropic (United States)","is_self":false,"confidence":"high","ids":{"openalex":"A5112327867","dblp":null,"s2":null},"rank":14,"rank_recent":18,"score":36.5714,"score_recent":27.381,"family_scores":{"bibliometric":34.9206,"domain":39.0476},"family_scores_recent":{"bibliometric":16.67,"domain":52.38},"metrics":{"works":38,"works_recent":17,"citations_total":871,"citations_recent":174,"h_index":25,"h_index_recent":11,"mean_citations":141.3158,"credit_works":6.5608,"credit_citations":870.9304,"domain_works":1,"domain_credit":0.35,"domain_share":0.0533,"domain_share_recent":0.2592,"venue_points":3.4734,"venue_points_recent":1.8734,"top_venue_papers":9,"asset_papers":4,"asset_citations":5,"first_last_works":12,"first_last_share":0.8231},"signals":{"citations_total":{"raw":871,"transformed":6.7708,"percentile":0.3095,"weight":0.2,"contribution":6.1905,"family":"bibliometric"},"citations_recent":{"raw":174,"transformed":5.1648,"percentile":0.1667,"weight":0.15,"contribution":2.5,"family":"bibliometric"},"h_index":{"raw":25,"transformed":25,"percentile":0.3571,"weight":0.15,"contribution":5.3571,"family":"bibliometric"},"mean_citations":{"raw":141.3158,"transformed":4.958,"percentile":0.6905,"weight":0.1,"contribution":6.9048,"family":"bibliometric"},"domain_share":{"raw":0.0533,"transformed":0.0533,"percentile":0.6429,"weight":0.08,"contribution":5.1429,"family":"domain"},"venue_points":{"raw":3.4734,"transformed":1.8637,"percentile":0.2619,"weight":0.1,"contribution":2.619,"family":"domain"},"asset_citations":{"raw":5,"transformed":1.7918,"percentile":0.3571,"weight":0.22,"contribution":7.8571,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":174,"transformed":5.1648,"percentile":0.1667,"weight":0.4,"contribution":6.6667,"family":"bibliometric"},"works_recent":{"raw":17,"transformed":2.8904,"percentile":0.119,"weight":0.15,"contribution":1.7857,"family":"bibliometric"},"h_index_recent":{"raw":11,"transformed":11,"percentile":0.2143,"weight":0.15,"contribution":3.2143,"family":"bibliometric"},"venue_points_recent":{"raw":1.8734,"transformed":1.3687,"percentile":0.2143,"weight":0.15,"contribution":3.2143,"family":"domain"},"domain_share_recent":{"raw":0.2592,"transformed":0.2592,"percentile":0.8333,"weight":0.15,"contribution":12.5,"family":"domain"}},"top_papers":[{"title":"Do ImageNet Classifiers Generalize to ImageNet?","year":2019,"venue":"arXiv (Cornell University)","citations":927,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.1902.10811"},{"title":"Cloud Programming Simplified: A Berkeley View on Serverless Computing","year":2019,"venue":"arXiv (Cornell University)","citations":903,"credit":0.0208,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.1902.03383"},{"title":"Do CIFAR-10 Classifiers Generalize to CIFAR-10?","year":2018,"venue":"arXiv (Cornell University)","citations":458,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.1806.00451"},{"title":"OpenThoughts: Data Recipes for Reasoning Models","year":2025,"venue":"arXiv (Cornell University)","citations":362,"credit":0.0052,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2506.04178"},{"title":"DataComp: In search of the next generation of multimodal datasets","year":2023,"venue":"neural information processing systems","citations":356,"credit":0.0078,"kind":"dataset","doi":"https://doi.org/10.52202/075280-1179"}],"recent_top_papers":[{"title":"DataComp: In search of the next generation of multimodal datasets","year":2023,"venue":"neural information processing systems","citations":356,"credit":0.0078,"kind":"dataset","doi":"https://doi.org/10.52202/075280-1179","tier":"A"},{"title":"DataComp-LM: In search of the next generation of training sets for language models","year":2024,"venue":"neural information processing systems","citations":216,"credit":0.35,"kind":"paper","doi":"https://doi.org/10.52202/079017-0455","tier":"A"},{"title":"Dataset Decomposition: Faster LLM Training with Variable Sequence Length Curriculum","year":2024,"venue":"neural information processing systems","citations":31,"credit":0.05,"kind":"dataset","doi":"https://doi.org/10.52202/079017-1139","tier":"A"},{"title":"Datasets, Documents, and Repetitions: The Practicalities of Unequal Data Quality","year":2025,"venue":"neural information processing systems","citations":9,"credit":0.05,"kind":"dataset","doi":"https://doi.org/10.52202/085713-0999","tier":"A"},{"title":"TiC-LM: A Web-Scale Benchmark for Time-Continual LLM Pretraining","year":2025,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":8,"credit":0.0278,"kind":"benchmark","doi":"https://doi.org/10.18653/v1/2025.acl-long.1551","tier":"A"}],"latest_paper":{"title":"Datasets, Documents, and Repetitions: The Practicalities of Unequal Data Quality","year":2025,"venue":"neural information processing systems","citations":9,"credit":0.05,"kind":"dataset","doi":"https://doi.org/10.52202/085713-0999","tier":"A","upcoming":false}},{"key":"suriya-gunasekar-a5015603055","name":"Suriya Gunasekar","name_zh":null,"affiliation":null,"is_self":false,"confidence":"high","ids":{"openalex":"A5015603055","dblp":null,"s2":null},"rank":15,"rank_recent":13,"score":35.8333,"score_recent":41.1905,"family_scores":{"bibliometric":45.8333,"domain":20.8333},"family_scores_recent":{"bibliometric":38.43,"domain":47.62},"metrics":{"works":43,"works_recent":15,"citations_total":878,"citations_recent":549,"h_index":24,"h_index_recent":12,"mean_citations":184.0233,"credit_works":11.1785,"credit_citations":877.7756,"domain_works":2,"domain_credit":0.75,"domain_share":0.0671,"domain_share_recent":0.2861,"venue_points":0.875,"venue_points_recent":0.375,"top_venue_papers":1,"asset_papers":0,"asset_citations":0,"first_last_works":20,"first_last_share":0.8633},"signals":{"citations_total":{"raw":878,"transformed":6.7788,"percentile":0.3571,"weight":0.2,"contribution":7.1429,"family":"bibliometric"},"citations_recent":{"raw":549,"transformed":6.3099,"percentile":0.5476,"weight":0.15,"contribution":8.2143,"family":"bibliometric"},"h_index":{"raw":24,"transformed":24,"percentile":0.2857,"weight":0.15,"contribution":4.2857,"family":"bibliometric"},"mean_citations":{"raw":184.0233,"transformed":5.2205,"percentile":0.7857,"weight":0.1,"contribution":7.8571,"family":"bibliometric"},"domain_share":{"raw":0.0671,"transformed":0.0671,"percentile":0.6905,"weight":0.08,"contribution":5.5238,"family":"domain"},"venue_points":{"raw":0.875,"transformed":0.9354,"percentile":0.0714,"weight":0.1,"contribution":0.7143,"family":"domain"},"asset_citations":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.22,"contribution":2.0952,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":549,"transformed":6.3099,"percentile":0.5476,"weight":0.4,"contribution":21.9048,"family":"bibliometric"},"works_recent":{"raw":15,"transformed":2.7726,"percentile":0.0714,"weight":0.15,"contribution":1.0714,"family":"bibliometric"},"h_index_recent":{"raw":12,"transformed":12,"percentile":0.2619,"weight":0.15,"contribution":3.9286,"family":"bibliometric"},"venue_points_recent":{"raw":0.375,"transformed":0.6124,"percentile":0.0714,"weight":0.15,"contribution":1.0714,"family":"domain"},"domain_share_recent":{"raw":0.2861,"transformed":0.2861,"percentile":0.881,"weight":0.15,"contribution":13.2143,"family":"domain"}},"top_papers":[{"title":"Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone","year":2024,"venue":"arXiv (Cornell University)","citations":2674,"credit":0.0026,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2404.14219"},{"title":"Phi-4 Technical Report","year":2024,"venue":"arXiv (Cornell University)","citations":1605,"credit":0.01,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2412.08905"},{"title":"Textbooks Are All You Need","year":2023,"venue":"arXiv (Cornell University)","citations":1104,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2306.11644"},{"title":"Textbooks Are All You Need II: phi-1.5 technical report","year":2023,"venue":"arXiv (Cornell University)","citations":712,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2309.05463"},{"title":"Learning Non-Discriminatory Predictors","year":2017,"venue":"arXiv (Cornell University)","citations":228,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.1702.06081"}],"recent_top_papers":[{"title":"(S)GD over Diagonal Linear Networks: Implicit bias, Large Stepsizes and Edge of Stability","year":2023,"venue":"neural information processing systems","citations":5,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.52202/075280-1279","tier":"A"},{"title":"Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone","year":2024,"venue":"arXiv (Cornell University)","citations":2674,"credit":0.0026,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2404.14219","tier":"-"},{"title":"Phi-4 Technical Report","year":2024,"venue":"arXiv (Cornell University)","citations":1605,"credit":0.01,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2412.08905","tier":"-"},{"title":"Textbooks Are All You Need","year":2023,"venue":"arXiv (Cornell University)","citations":1104,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2306.11644","tier":"-"},{"title":"Textbooks Are All You Need II: phi-1.5 technical report","year":2023,"venue":"arXiv (Cornell University)","citations":712,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2309.05463","tier":"-"}],"latest_paper":{"title":"Nemotron 3 Ultra: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning","year":2026,"venue":"arXiv (Cornell University)","citations":54,"credit":null,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2606.15007","tier":"-","upcoming":false}},{"key":"lichang-chen-a5101668648","name":"Lichang Chen","name_zh":null,"affiliation":"University of Maryland, College Park","is_self":false,"confidence":"high","ids":{"openalex":"A5101668648","dblp":null,"s2":null},"rank":16,"rank_recent":16,"score":31.7143,"score_recent":36.5476,"family_scores":{"bibliometric":20.6349,"domain":48.3333},"family_scores_recent":{"bibliometric":31.8,"domain":47.62},"metrics":{"works":36,"works_recent":26,"citations_total":266,"citations_recent":254,"h_index":18,"h_index_recent":18,"mean_citations":55.4167,"credit_works":6.7563,"credit_citations":266.1118,"domain_works":5,"domain_credit":0.5839,"domain_share":0.0864,"domain_share_recent":0.1828,"venue_points":1.2511,"venue_points_recent":1.2511,"top_venue_papers":4,"asset_papers":3,"asset_citations":14,"first_last_works":12,"first_last_share":0.7771},"signals":{"citations_total":{"raw":266,"transformed":5.5872,"percentile":0.0714,"weight":0.2,"contribution":1.4286,"family":"bibliometric"},"citations_recent":{"raw":254,"transformed":5.5413,"percentile":0.2619,"weight":0.15,"contribution":3.9286,"family":"bibliometric"},"h_index":{"raw":18,"transformed":18,"percentile":0.1667,"weight":0.15,"contribution":2.5,"family":"bibliometric"},"mean_citations":{"raw":55.4167,"transformed":4.0328,"percentile":0.4524,"weight":0.1,"contribution":4.5238,"family":"bibliometric"},"domain_share":{"raw":0.0864,"transformed":0.0864,"percentile":0.8333,"weight":0.08,"contribution":6.6667,"family":"domain"},"venue_points":{"raw":1.2511,"transformed":1.1185,"percentile":0.1667,"weight":0.1,"contribution":1.6667,"family":"domain"},"asset_citations":{"raw":14,"transformed":2.7081,"percentile":0.5,"weight":0.22,"contribution":11,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":254,"transformed":5.5413,"percentile":0.2619,"weight":0.4,"contribution":10.4762,"family":"bibliometric"},"works_recent":{"raw":26,"transformed":3.2958,"percentile":0.3095,"weight":0.15,"contribution":4.6429,"family":"bibliometric"},"h_index_recent":{"raw":18,"transformed":18,"percentile":0.4762,"weight":0.15,"contribution":7.1429,"family":"bibliometric"},"venue_points_recent":{"raw":1.2511,"transformed":1.1185,"percentile":0.1667,"weight":0.15,"contribution":2.5,"family":"domain"},"domain_share_recent":{"raw":0.1828,"transformed":0.1828,"percentile":0.7857,"weight":0.15,"contribution":11.7857,"family":"domain"}},"top_papers":[{"title":"Hallusionbench: An Advanced Diagnostic Suite for Entangled Language Hallucination and Visual Illusion in Large Vision-Language Models","year":2024,"venue":"IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings","citations":526,"credit":0.025,"kind":"dataset","doi":"https://doi.org/10.1109/cvpr52733.2024.01363"},{"title":"AlpaGasus: Training A Better Alpaca with Fewer Data","year":2023,"venue":"arXiv (Cornell University)","citations":332,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2307.08701"},{"title":"From Quantity to Quality: Boosting LLM Performance with Self-Guided Data Selection for Instruction Tuning","year":2024,"venue":"Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (NAACL-HLT)","citations":248,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.18653/v1/2024.naacl-long.421"},{"title":"Unbiased Watermark for Large Language Models","year":2023,"venue":"arXiv (Cornell University)","citations":122,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2310.10669"},{"title":"When do you need Chain-of-Thought Prompting for ChatGPT?","year":2023,"venue":"arXiv (Cornell University)","citations":89,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2304.03262"}],"recent_top_papers":[{"title":"Hallusionbench: An Advanced Diagnostic Suite for Entangled Language Hallucination and Visual Illusion in Large Vision-Language Models","year":2024,"venue":"IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings - IEEE Computer Society Conference on Computer Vision and Pattern Recognition/Proceedings","citations":526,"credit":0.025,"kind":"dataset","doi":"https://doi.org/10.1109/cvpr52733.2024.01363","tier":"A"},{"title":"MMAU-Pro: A Challenging and Comprehensive Benchmark for Holistic Evaluation of Audio General Intelligence","year":2026,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":76,"credit":0.0078,"kind":"benchmark","doi":"https://doi.org/10.1609/aaai.v40i27.39430","tier":"A"},{"title":"From Lists to Emojis: How Format Bias Affects Model Alignment","year":2025,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":33,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.18653/v1/2025.acl-long.1308","tier":"A"},{"title":"Creativity or Brute Force? Using Brainteasers as a Window into the Problem-Solving Abilities of Large Language Models","year":2025,"venue":"neural information processing systems","citations":5,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.52202/085713-4917","tier":"A"},{"title":"From Quantity to Quality: Boosting LLM Performance with Self-Guided Data Selection for Instruction Tuning","year":2024,"venue":"Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (NAACL-HLT)","citations":248,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.18653/v1/2024.naacl-long.421","tier":"B"}],"latest_paper":{"title":"MMAU-Pro: A Challenging and Comprehensive Benchmark for Holistic Evaluation of Audio General Intelligence","year":2026,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":76,"credit":0.0078,"kind":"benchmark","doi":"https://doi.org/10.1609/aaai.v40i27.39430","tier":"A","upcoming":false}},{"key":"xuanhe-zhou","name":"Xuanhe Zhou","name_zh":"周煊赫","affiliation":"Shanghai Jiao Tong University","is_self":false,"confidence":"high","ids":{"openalex":"A5056912386","dblp":null,"s2":null},"rank":17,"rank_recent":15,"score":29.3571,"score_recent":38.0952,"family_scores":{"bibliometric":27.9762,"domain":31.4286},"family_scores_recent":{"bibliometric":37.58,"domain":39.29},"metrics":{"works":50,"works_recent":39,"citations_total":503,"citations_recent":261,"h_index":24,"h_index_recent":18,"mean_citations":49.96,"credit_works":10.1217,"credit_citations":503.1371,"domain_works":0,"domain_credit":0,"domain_share":0,"domain_share_recent":0,"venue_points":22.2238,"venue_points_recent":14.6917,"top_venue_papers":34,"asset_papers":2,"asset_citations":4,"first_last_works":16,"first_last_share":0.6274},"signals":{"citations_total":{"raw":503,"transformed":6.2226,"percentile":0.2143,"weight":0.2,"contribution":4.2857,"family":"bibliometric"},"citations_recent":{"raw":261,"transformed":5.5683,"percentile":0.3095,"weight":0.15,"contribution":4.6429,"family":"bibliometric"},"h_index":{"raw":24,"transformed":24,"percentile":0.2857,"weight":0.15,"contribution":4.2857,"family":"bibliometric"},"mean_citations":{"raw":49.96,"transformed":3.931,"percentile":0.3571,"weight":0.1,"contribution":3.5714,"family":"bibliometric"},"domain_share":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.08,"contribution":0.7619,"family":"domain"},"venue_points":{"raw":22.2238,"transformed":4.7142,"percentile":0.5,"weight":0.1,"contribution":5,"family":"domain"},"asset_citations":{"raw":4,"transformed":1.6094,"percentile":0.3095,"weight":0.22,"contribution":6.8095,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":261,"transformed":5.5683,"percentile":0.3095,"weight":0.4,"contribution":12.381,"family":"bibliometric"},"works_recent":{"raw":39,"transformed":3.6889,"percentile":0.4524,"weight":0.15,"contribution":6.7857,"family":"bibliometric"},"h_index_recent":{"raw":18,"transformed":18,"percentile":0.4762,"weight":0.15,"contribution":7.1429,"family":"bibliometric"},"venue_points_recent":{"raw":14.6917,"transformed":3.833,"percentile":0.6905,"weight":0.15,"contribution":10.3571,"family":"domain"},"domain_share_recent":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.15,"contribution":1.4286,"family":"domain"}},"top_papers":[{"title":"Tool Learning with Foundation Models","year":2024,"venue":"ACM Computing Surveys","citations":544,"credit":0.0061,"kind":"paper","doi":"https://doi.org/10.1145/3704435"},{"title":"QTune: a query-aware database tuning system with deep reinforcement learning","year":2019,"venue":"Proceedings of the VLDB Endowment","citations":281,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.14778/3352063.3352129"},{"title":"Database Meets Artificial Intelligence: A Survey","year":2020,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":180,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2020.2994641"},{"title":"D-Bot: Database Diagnosis System using Large Language Models","year":2024,"venue":"Proceedings of the VLDB Endowment","citations":112,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.14778/3675034.3675043"},{"title":"AI Meets Database: AI4DB and DB4AI","year":2021,"venue":"ACM SIGMOD International Conference on Management of Data (SIGMOD)","citations":110,"credit":0.25,"kind":"paper","doi":"https://doi.org/10.1145/3448016.3457542"}],"recent_top_papers":[{"title":"D-Bot: Database Diagnosis System using Large Language Models","year":2024,"venue":"Proceedings of the VLDB Endowment","citations":112,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.14778/3675034.3675043","tier":"A"},{"title":"Learned Index: A Comprehensive Experimental Evaluation","year":2023,"venue":"Proceedings of the VLDB Endowment","citations":95,"credit":0.25,"kind":"paper","doi":"https://doi.org/10.14778/3594512.3594528","tier":"A"},{"title":"Chat2Data: An Interactive Data Analysis System with RAG, Vector Databases and LLMs","year":2024,"venue":"Proceedings of the VLDB Endowment","citations":63,"credit":0.25,"kind":"paper","doi":"https://doi.org/10.14778/3685800.3685905","tier":"A"},{"title":"Automatic Database Knob Tuning: A Survey","year":2023,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":62,"credit":0.25,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2023.3266893","tier":"A"},{"title":"LLM for Data Management","year":2024,"venue":"Proceedings of the VLDB Endowment","citations":60,"credit":0.25,"kind":"paper","doi":"https://doi.org/10.14778/3685800.3685838","tier":"A"}],"latest_paper":{"title":"DBAIOps: A Reasoning LLM-Enhanced Database Operation and Maintenance System using Knowledge Graphs","year":2026,"venue":"Proceedings of the VLDB Endowment","citations":10,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.14778/3797919.3797937","tier":"A","upcoming":false}},{"key":"chaokun-wang","name":"Chaokun Wang","name_zh":"王朝坤","affiliation":"Tsinghua University","is_self":false,"confidence":"high","ids":{"openalex":"A5047153705","dblp":null,"s2":null},"rank":18,"rank_recent":21,"score":27.9048,"score_recent":22.0238,"family_scores":{"bibliometric":11.9048,"domain":51.9048},"family_scores_recent":{"bibliometric":15.65,"domain":36.91},"metrics":{"works":178,"works_recent":51,"citations_total":373,"citations_recent":29,"h_index":23,"h_index_recent":10,"mean_citations":12.9101,"credit_works":32.5921,"credit_citations":373.1411,"domain_works":0,"domain_credit":0,"domain_share":0,"domain_share_recent":0,"venue_points":37.309,"venue_points_recent":11.5882,"top_venue_papers":64,"asset_papers":4,"asset_citations":18,"first_last_works":47,"first_last_share":0.5538},"signals":{"citations_total":{"raw":373,"transformed":5.9243,"percentile":0.1667,"weight":0.2,"contribution":3.3333,"family":"bibliometric"},"citations_recent":{"raw":29,"transformed":3.4012,"percentile":0.0238,"weight":0.15,"contribution":0.3571,"family":"bibliometric"},"h_index":{"raw":23,"transformed":23,"percentile":0.2143,"weight":0.15,"contribution":3.2143,"family":"bibliometric"},"mean_citations":{"raw":12.9101,"transformed":2.6326,"percentile":0.0238,"weight":0.1,"contribution":0.2381,"family":"bibliometric"},"domain_share":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.08,"contribution":0.7619,"family":"domain"},"venue_points":{"raw":37.309,"transformed":6.1081,"percentile":0.6905,"weight":0.1,"contribution":6.9048,"family":"domain"},"asset_citations":{"raw":18,"transformed":2.9444,"percentile":0.5952,"weight":0.22,"contribution":13.0952,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":29,"transformed":3.4012,"percentile":0.0238,"weight":0.4,"contribution":0.9524,"family":"bibliometric"},"works_recent":{"raw":51,"transformed":3.9512,"percentile":0.5238,"weight":0.15,"contribution":7.8571,"family":"bibliometric"},"h_index_recent":{"raw":10,"transformed":10,"percentile":0.1429,"weight":0.15,"contribution":2.1429,"family":"bibliometric"},"venue_points_recent":{"raw":11.5882,"transformed":3.4041,"percentile":0.6429,"weight":0.15,"contribution":9.6429,"family":"domain"},"domain_share_recent":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.15,"contribution":1.4286,"family":"domain"}},"top_papers":[{"title":"Community detection in social networks: an in-depth benchmarking study with a procedure-oriented framework","year":2015,"venue":"Proceedings of the VLDB Endowment","citations":174,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.14778/2794367.2794370"},{"title":"Follow But No Track: Privacy Preserved Profile Publishing in Cyber-Physical Social Systems","year":2017,"venue":"IEEE Internet of Things Journal","citations":135,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.1109/jiot.2017.2679483"},{"title":"Multiple Source Detection without Knowing the Underlying Propagation Model","year":2017,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":106,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v31i1.10477"},{"title":"A workflow net similarity measure based on transition adjacency relations","year":2010,"venue":"Computers in Industry","citations":101,"credit":0.0833,"kind":"paper","doi":"https://doi.org/10.1016/j.compind.2010.01.001"},{"title":"Multi-behavior Self-supervised Learning for Recommendation","year":2023,"venue":"International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR)","citations":99,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.1145/3539618.3591734"}],"recent_top_papers":[{"title":"Multi-behavior Self-supervised Learning for Recommendation","year":2023,"venue":"International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR)","citations":99,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.1145/3539618.3591734","tier":"A"},{"title":"Graph Contrastive Learning with Generative Adversarial Network","year":2023,"venue":"ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD)","citations":39,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.1145/3580305.3599370","tier":"A"},{"title":"HybridGNN: Learning Hybrid Representation for Recommendation in Multiplex Heterogeneous Networks","year":2022,"venue":"IEEE International Conference on Data Engineering (ICDE)","citations":19,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.1109/icde53745.2022.00106","tier":"A"},{"title":"Learning Adaptive Node Embeddings across Graphs","year":2022,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":15,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2022.3160211","tier":"A"},{"title":"Instant Representation Learning for Recommendation over Large Dynamic Graphs","year":2023,"venue":"IEEE International Conference on Data Engineering (ICDE)","citations":14,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.1109/icde55515.2023.00014","tier":"A"}],"latest_paper":{"title":"What Should I Cite? A RAG Benchmark for Academic Citation Prediction","year":2026,"venue":"International World Wide Web Conference (WWW)","citations":5,"credit":0.0179,"kind":"benchmark","doi":"https://doi.org/10.1145/3774904.3792075","tier":"A","upcoming":false}},{"key":"can-xu-a5057548170","name":"Can Xu","name_zh":null,"affiliation":"Huaqiao University","is_self":false,"confidence":"high","ids":{"openalex":"A5057548170","dblp":null,"s2":null},"rank":19,"rank_recent":12,"score":26.8095,"score_recent":41.7857,"family_scores":{"bibliometric":30.9524,"domain":20.5952},"family_scores_recent":{"bibliometric":41.33,"domain":42.85},"metrics":{"works":32,"works_recent":25,"citations_total":533,"citations_recent":504,"h_index":15,"h_index_recent":14,"mean_citations":52.9375,"credit_works":7.6546,"credit_citations":533.1433,"domain_works":4,"domain_credit":0.55,"domain_share":0.0719,"domain_share_recent":0.135,"venue_points":0.5071,"venue_points_recent":0.5071,"top_venue_papers":3,"asset_papers":0,"asset_citations":0,"first_last_works":14,"first_last_share":0.8622},"signals":{"citations_total":{"raw":533,"transformed":6.2804,"percentile":0.2619,"weight":0.2,"contribution":5.2381,"family":"bibliometric"},"citations_recent":{"raw":504,"transformed":6.2246,"percentile":0.5,"weight":0.15,"contribution":7.5,"family":"bibliometric"},"h_index":{"raw":15,"transformed":15,"percentile":0.119,"weight":0.15,"contribution":1.7857,"family":"bibliometric"},"mean_citations":{"raw":52.9375,"transformed":3.9878,"percentile":0.4048,"weight":0.1,"contribution":4.0476,"family":"bibliometric"},"domain_share":{"raw":0.0719,"transformed":0.0719,"percentile":0.7381,"weight":0.08,"contribution":5.9048,"family":"domain"},"venue_points":{"raw":0.5071,"transformed":0.7121,"percentile":0.0238,"weight":0.1,"contribution":0.2381,"family":"domain"},"asset_citations":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.22,"contribution":2.0952,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":504,"transformed":6.2246,"percentile":0.5,"weight":0.4,"contribution":20,"family":"bibliometric"},"works_recent":{"raw":25,"transformed":3.2581,"percentile":0.2619,"weight":0.15,"contribution":3.9286,"family":"bibliometric"},"h_index_recent":{"raw":14,"transformed":14,"percentile":0.3333,"weight":0.15,"contribution":5,"family":"bibliometric"},"venue_points_recent":{"raw":0.5071,"transformed":0.7121,"percentile":0.119,"weight":0.15,"contribution":1.7857,"family":"domain"},"domain_share_recent":{"raw":0.135,"transformed":0.135,"percentile":0.7381,"weight":0.15,"contribution":11.0714,"family":"domain"}},"top_papers":[{"title":"WizardLM: Empowering large pre-trained language models to follow complex instructions","year":2023,"venue":"arXiv (Cornell University)","citations":1146,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2304.12244"},{"title":"PromDA: Prompt-based Data Augmentation for Low-Resource NLU Tasks","year":2022,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":77,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.18653/v1/2022.acl-long.292"},{"title":"Augmented Large Language Models with Parametric Knowledge Guiding","year":2023,"venue":"arXiv (Cornell University)","citations":67,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2305.04757"},{"title":"LexLIP: Lexicon-Bottlenecked Language-Image Pre-Training for Large-Scale Image-Text Sparse Retrieval","year":2023,"venue":"IEEE/CVF International Conference on Computer Vision (ICCV)","citations":43,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.1109/iccv51070.2023.01029"},{"title":"Explosive or Continuous: Incoherent state determines the route to synchronization","year":2015,"venue":"Scientific Reports","citations":38,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1038/srep12039"}],"recent_top_papers":[{"title":"PromDA: Prompt-based Data Augmentation for Low-Resource NLU Tasks","year":2022,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":77,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.18653/v1/2022.acl-long.292","tier":"A"},{"title":"LexLIP: Lexicon-Bottlenecked Language-Image Pre-Training for Large-Scale Image-Text Sparse Retrieval","year":2023,"venue":"IEEE/CVF International Conference on Computer Vision (ICCV)","citations":43,"credit":0.0357,"kind":"paper","doi":"https://doi.org/10.1109/iccv51070.2023.01029","tier":"A"},{"title":"Fine-Grained Distillation for Long Document Retrieval","year":2024,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":27,"credit":0.0417,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v38i17.29947","tier":"A"},{"title":"PCL: Peer-Contrastive Learning with Diverse Augmentations for Unsupervised Sentence Embeddings","year":2022,"venue":"Conference on Empirical Methods in Natural Language Processing (EMNLP)","citations":27,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.18653/v1/2022.emnlp-main.826","tier":"B"},{"title":"WizardLM: Empowering large pre-trained language models to follow complex instructions","year":2023,"venue":"arXiv (Cornell University)","citations":1146,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2304.12244","tier":"-"}],"latest_paper":{"title":"Unified Ott-Antonsen framework for stability and bifurcations in ring swarmalators","year":2026,"venue":"Physical review. E","citations":1,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1103/gzrs-djfw","tier":"-","upcoming":false}},{"key":"sheng-xiang","name":"Sheng Xiang","name_zh":"向声","affiliation":"Tongji University","is_self":true,"confidence":"high","ids":{"openalex":"A5101872194","dblp":"169/3825-1","s2":null},"rank":20,"rank_recent":19,"score":21.7143,"score_recent":25.7143,"family_scores":{"bibliometric":19.4444,"domain":25.119},"family_scores_recent":{"bibliometric":17.35,"domain":45.23},"metrics":{"works":24,"works_recent":19,"citations_total":272,"citations_recent":184,"h_index":11,"h_index_recent":8,"mean_citations":59.5833,"credit_works":5.4958,"credit_citations":272.1542,"domain_works":1,"domain_credit":0.0833,"domain_share":0.0152,"domain_share_recent":0.0188,"venue_points":11.9833,"venue_points_recent":9.1708,"top_venue_papers":11,"asset_papers":2,"asset_citations":0,"first_last_works":11,"first_last_share":0.7824},"signals":{"citations_total":{"raw":272,"transformed":5.6095,"percentile":0.119,"weight":0.2,"contribution":2.381,"family":"bibliometric"},"citations_recent":{"raw":184,"transformed":5.2204,"percentile":0.2143,"weight":0.15,"contribution":3.2143,"family":"bibliometric"},"h_index":{"raw":11,"transformed":11,"percentile":0.0714,"weight":0.15,"contribution":1.0714,"family":"bibliometric"},"mean_citations":{"raw":59.5833,"transformed":4.104,"percentile":0.5,"weight":0.1,"contribution":5,"family":"bibliometric"},"domain_share":{"raw":0.0152,"transformed":0.0152,"percentile":0.5476,"weight":0.08,"contribution":4.381,"family":"domain"},"venue_points":{"raw":11.9833,"transformed":3.4617,"percentile":0.3571,"weight":0.1,"contribution":3.5714,"family":"domain"},"asset_citations":{"raw":0,"transformed":0,"percentile":0.0952,"weight":0.22,"contribution":2.0952,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":184,"transformed":5.2204,"percentile":0.2143,"weight":0.4,"contribution":8.5714,"family":"bibliometric"},"works_recent":{"raw":19,"transformed":2.9957,"percentile":0.1667,"weight":0.15,"contribution":2.5,"family":"bibliometric"},"h_index_recent":{"raw":8,"transformed":8,"percentile":0.0714,"weight":0.15,"contribution":1.0714,"family":"bibliometric"},"venue_points_recent":{"raw":9.1708,"transformed":3.0283,"percentile":0.5952,"weight":0.15,"contribution":8.9286,"family":"domain"},"domain_share_recent":{"raw":0.0188,"transformed":0.0188,"percentile":0.3095,"weight":0.15,"contribution":4.6429,"family":"domain"}},"top_papers":[{"title":"Financial time series forecasting with multi-modality graph neural network","year":2021,"venue":"Pattern Recognition","citations":461,"credit":0.125,"kind":"paper","doi":"https://doi.org/10.1016/j.patcog.2021.108218"},{"title":"Graph neural networks for financial fraud detection: a review.","year":2025,"venue":"Frontiers Comput. Sci.","citations":227,"credit":0.125,"kind":"paper","doi":"10.1007/s11704-024-40474-y"},{"title":"Temporal and Heterogeneous Graph Neural Network for Financial Time Series Prediction","year":2022,"venue":"ACM International Conference on Information and Knowledge Management (CIKM)","citations":156,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1145/3511808.3557089"},{"title":"Semi-supervised Credit Card Fraud Detection via Attribute-Driven Graph Representation","year":2023,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":148,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v37i12.26702"},{"title":"Spatio-Temporal Attention-Based Neural Network for Credit Card Fraud Detection","year":2020,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":139,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v34i01.5371"}],"recent_top_papers":[{"title":"Semi-supervised Credit Card Fraud Detection via Attribute-Driven Graph Representation","year":2023,"venue":"Proceedings of the AAAI Conference on Artificial Intelligence","citations":148,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1609/aaai.v37i12.26702","tier":"A"},{"title":"Anti-Money Laundering by Group-Aware Deep Graph Learning","year":2023,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":97,"credit":0.0625,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2023.3272396","tier":"A"},{"title":"Enhancing Attribute-Driven Fraud Detection With Risk-Aware Graph Representation","year":2025,"venue":"IEEE Transactions on Knowledge and Data Engineering","citations":35,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1109/tkde.2025.3543887","tier":"A"},{"title":"Efficient Learning-based Community-Preserving Graph Generation","year":2022,"venue":"IEEE International Conference on Data Engineering (ICDE)","citations":12,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1109/icde53745.2022.00194","tier":"A"},{"title":"Efficient Learning-Based Graph Simulation for Temporal Graphs","year":2025,"venue":"IEEE International Conference on Data Engineering (ICDE)","citations":3,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.1109/icde65448.2025.00026","tier":"A"}],"latest_paper":{"title":"GraphInstruct: A Progressive Benchmark for Diagnosing Capability Gaps in LLM Graph Generation.","year":2027,"venue":"NeurIPS","citations":0,"credit":0.125,"kind":"benchmark","doi":"10.48550/arXiv.2605.09997","tier":"A","upcoming":true}},{"key":"jeffrey-ji-peng-li-a5111296494","name":"Jeffrey Ji-Peng Li","name_zh":null,"affiliation":"Boston University","is_self":false,"confidence":"medium","ids":{"openalex":"A5111296494","dblp":null,"s2":null},"rank":21,"rank_recent":20,"score":20.2381,"score_recent":23.5714,"family_scores":{"bibliometric":7.5397,"domain":39.2857},"family_scores_recent":{"bibliometric":5.1,"domain":66.66},"metrics":{"works":9,"works_recent":9,"citations_total":93,"citations_recent":93,"h_index":6,"h_index_recent":6,"mean_citations":43.5556,"credit_works":1.0528,"credit_citations":92.8698,"domain_works":1,"domain_credit":0.4,"domain_share":0.3799,"domain_share_recent":0.3799,"venue_points":2.4,"venue_points_recent":2.4,"top_venue_papers":2,"asset_papers":1,"asset_citations":3,"first_last_works":2,"first_last_share":0.7599},"signals":{"citations_total":{"raw":93,"transformed":4.5433,"percentile":0.0238,"weight":0.2,"contribution":0.4762,"family":"bibliometric"},"citations_recent":{"raw":93,"transformed":4.5433,"percentile":0.0714,"weight":0.15,"contribution":1.0714,"family":"bibliometric"},"h_index":{"raw":6,"transformed":6,"percentile":0.0238,"weight":0.15,"contribution":0.3571,"family":"bibliometric"},"mean_citations":{"raw":43.5556,"transformed":3.7967,"percentile":0.2619,"weight":0.1,"contribution":2.619,"family":"bibliometric"},"domain_share":{"raw":0.3799,"transformed":0.3799,"percentile":0.9762,"weight":0.08,"contribution":7.8095,"family":"domain"},"venue_points":{"raw":2.4,"transformed":1.5492,"percentile":0.2143,"weight":0.1,"contribution":2.1429,"family":"domain"},"asset_citations":{"raw":3,"transformed":1.3863,"percentile":0.2619,"weight":0.22,"contribution":5.7619,"family":"domain"}},"signals_recent":{"citations_recent":{"raw":93,"transformed":4.5433,"percentile":0.0714,"weight":0.4,"contribution":2.8571,"family":"bibliometric"},"works_recent":{"raw":9,"transformed":2.3026,"percentile":0.0238,"weight":0.15,"contribution":0.3571,"family":"bibliometric"},"h_index_recent":{"raw":6,"transformed":6,"percentile":0.0238,"weight":0.15,"contribution":0.3571,"family":"bibliometric"},"venue_points_recent":{"raw":2.4,"transformed":1.5492,"percentile":0.3571,"weight":0.15,"contribution":5.3571,"family":"domain"},"domain_share_recent":{"raw":0.3799,"transformed":0.3799,"percentile":0.9762,"weight":0.15,"contribution":14.6429,"family":"domain"}},"top_papers":[{"title":"DataComp-LM: In search of the next generation of training sets for language models","year":2024,"venue":"neural information processing systems","citations":216,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.52202/079017-0455"},{"title":"Language models scale reliably with over-training and on downstream tasks","year":2024,"venue":"arXiv (Cornell University)","citations":122,"credit":0.0109,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2403.08540"},{"title":"Language Models Improve When Pretraining Data Matches Target Tasks","year":2025,"venue":"arXiv (Cornell University)","citations":19,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2507.12466"},{"title":"Better Alignment with Instruction Back-and-Forth Translation","year":2024,"venue":"Findings of the Association for Computational Linguistics: EMNLP (Findings of EMNLP)","citations":13,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.18653/v1/2024.findings-emnlp.777"},{"title":"AI Knows Best? The Paradox of Expertise, AI-Reliance, and Performance in Educational Tutoring Decision-Making Tasks","year":2026,"venue":"International Conference on Learning Analytics and Knowledge (LAK)","citations":9,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.1145/3785022.3785035"}],"recent_top_papers":[{"title":"DataComp-LM: In search of the next generation of training sets for language models","year":2024,"venue":"neural information processing systems","citations":216,"credit":0.4,"kind":"paper","doi":"https://doi.org/10.52202/079017-0455","tier":"A"},{"title":"TiC-LM: A Web-Scale Benchmark for Time-Continual LLM Pretraining","year":2025,"venue":"Proceedings of the conference - Association for Computational Linguistics. Meeting","citations":8,"credit":0.4,"kind":"benchmark","doi":"https://doi.org/10.18653/v1/2025.acl-long.1551","tier":"A"},{"title":"Language models scale reliably with over-training and on downstream tasks","year":2024,"venue":"arXiv (Cornell University)","citations":122,"credit":0.0109,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2403.08540","tier":"-"},{"title":"Language Models Improve When Pretraining Data Matches Target Tasks","year":2025,"venue":"arXiv (Cornell University)","citations":19,"credit":0.0312,"kind":"paper","doi":"https://doi.org/10.48550/arxiv.2507.12466","tier":"-"},{"title":"Better Alignment with Instruction Back-and-Forth Translation","year":2024,"venue":"Findings of the Association for Computational Linguistics: EMNLP (Findings of EMNLP)","citations":13,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.18653/v1/2024.findings-emnlp.777","tier":"-"}],"latest_paper":{"title":"AI Knows Best? The Paradox of Expertise, AI-Reliance, and Performance in Educational Tutoring Decision-Making Tasks","year":2026,"venue":"International Conference on Learning Analytics and Knowledge (LAK)","citations":9,"credit":0.05,"kind":"paper","doi":"https://doi.org/10.1145/3785022.3785035","tier":"-","upcoming":false}}]}</script>
+<script>
+(function () {
+  "use strict";
+
+  var payload = JSON.parse(document.getElementById("payload").textContent);
+  var meta = payload.meta || {};
+  var scholars = payload.scholars || [];
+
+  var SIGNAL_LABELS = {
+    citations_total: "总引用",
+    citations_recent: "近五年引用",
+    h_index: "h-index",
+    mean_citations: "篇均引用",
+    domain_share: "领域占比",
+    venue_points: "会场加权分",
+    asset_citations: "资产被引",
+    works_recent: "近五年论文数",
+    h_index_recent: "近五年 h-index",
+    venue_points_recent: "近五年会场加权分",
+    domain_share_recent: "近五年领域占比"
+  };
+  var FAMILY_LABELS = { bibliometric: "文献计量", domain: "领域贡献" };
+  var CONF_LABELS = { high: "高", medium: "中", low: "低" };
+  var CONF_ORDER = { high: 3, medium: 2, low: 1 };
+  var TRANSFORM_LABELS = { log1p: "log1p", sqrt: "sqrt", identity: "identity" };
+
+  var NF = new Intl.NumberFormat("en-US");
+  var state = { board: "overall", key: "score", dir: "desc", query: "" };
+  var registry = [];
+
+  var tbody = document.getElementById("rows");
+  var emptyEl = document.getElementById("empty");
+  var countEl = document.getElementById("count");
+  var queryEl = document.getElementById("q");
+  var noteEl = document.getElementById("boardNote");
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+
+  // ------------------------------------------------------------------ 格式化
+  function num(value) {
+    return typeof value === "number" && isFinite(value) ? value : null;
+  }
+  function fmtInt(value) {
+    var n = num(value);
+    return n == null ? "—" : NF.format(Math.round(n));
+  }
+  function fmt1(value) {
+    var n = num(value);
+    if (n == null) return "—";
+    var text = n.toFixed(1);
+    return text === "-0.0" ? "0.0" : text;
+  }
+  function fmt2(value) {
+    var n = num(value);
+    return n == null ? "—" : n.toFixed(2);
+  }
+  function fmtPct(value) {
+    var n = num(value);
+    return n == null ? "—" : (n * 100).toFixed(1) + "%";
+  }
+  function fmtRaw(name, value) {
+    var n = num(value);
+    if (n == null) return "—";
+    if (name.indexOf("share") !== -1) return (n * 100).toFixed(1) + "%";
+    if (Number.isInteger(n)) return NF.format(n);
+    return n.toFixed(1);
+  }
+  function metric(s, name) {
+    return num(s.metrics ? s.metrics[name] : null);
+  }
+  function familyScore(s, name) {
+    var src = state.board === "overall" ? s.family_scores : s.family_scores_recent;
+    return num(src ? src[name] : null);
+  }
+
+  // ------------------------------------------------------------------ 取值与排序
+  function getValue(s, key) {
+    switch (key) {
+      case "rank": return state.board === "overall" ? num(s.rank) : num(s.rank_recent);
+      case "score": return state.board === "overall" ? num(s.score) : num(s.score_recent);
+      case "bib": return familyScore(s, "bibliometric");
+      case "dom": return familyScore(s, "domain");
+      case "citations": return metric(s, state.board === "overall" ? "citations_total" : "citations_recent");
+      case "hindex": return metric(s, state.board === "overall" ? "h_index" : "h_index_recent");
+      case "share": return metric(s, state.board === "overall" ? "domain_share" : "domain_share_recent");
+      case "asset": return metric(s, "asset_citations");
+      case "latest": return s.latest_paper ? num(s.latest_paper.year) : null;
+      case "confidence": return s.confidence ? (CONF_ORDER[s.confidence] || 0) : null;
+      case "name": return [s.name_zh || "", s.name || ""].join(" ").trim();
+      case "affil": return s.affiliation || "";
+      default: return null;
+    }
+  }
+
+  function compare(a, b) {
+    var va = getValue(a, state.key);
+    var vb = getValue(b, state.key);
+    var na = va === null || va === undefined || va === "";
+    var nb = vb === null || vb === undefined || vb === "";
+    if (na && nb) return tieBreak(a, b);
+    if (na) return 1;
+    if (nb) return -1;
+    var result;
+    if (typeof va === "number" && typeof vb === "number") {
+      result = va - vb;
+    } else {
+      result = String(va).localeCompare(String(vb), "zh-Hans-CN", { numeric: true, sensitivity: "base" });
+    }
+    if (result !== 0) return state.dir === "asc" ? result : -result;
+    return tieBreak(a, b);
+  }
+  function tieBreak(a, b) {
+    var ra = a.rank == null ? 1e9 : a.rank;
+    var rb = b.rank == null ? 1e9 : b.rank;
+    if (ra !== rb) return ra - rb;
+    return String(a.key).localeCompare(String(b.key));
+  }
+
+  // ------------------------------------------------------------------ 行
+  function el(tag, cls, text) {
+    var node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text !== undefined && text !== null) node.textContent = text;
+    return node;
+  }
+
+  function buildRow(s, index) {
+    var tr = el("tr", "leader-row");
+    tr.dataset.key = s.key;
+    tr.dataset.index = String(index);
+    if (s.is_self) tr.classList.add("is-self");
+
+    var rankCell = el("td", "col-rank num");
+    rankCell.appendChild(el("span", "rank", "—"));
+    tr.appendChild(rankCell);
+
+    var nameCell = el("td", "col-name");
+    var nm = el("div", "nm");
+    var zh = el("span", "nm-zh", s.name_zh || s.name || "—");
+    nm.appendChild(zh);
+    if (s.is_self) {
+      var tag = el("span", "tag-self", "本人");
+      tag.title = "榜单维护者本人";
+      nm.appendChild(tag);
+    }
+    nameCell.appendChild(nm);
+    if (s.name_zh && s.name) nameCell.appendChild(el("div", "nm-en", s.name));
+    tr.appendChild(nameCell);
+
+    var affil = el("td", "affil", s.affiliation || "—");
+    tr.appendChild(affil);
+
+    var scoreCell = el("td", "col-score num");
+    scoreCell.appendChild(el("span", "score", "—"));
+    tr.appendChild(scoreCell);
+
+    ["bib", "dom"].forEach(function (fam) {
+      var cell = el("td", "col-" + fam + " num fam");
+      cell.dataset.f = fam;
+      var sw = el("i", "sw " + (fam === "bib" ? "sw-bib" : "sw-dom"));
+      sw.setAttribute("aria-hidden", "true");
+      cell.appendChild(sw);
+      cell.appendChild(el("span", "v", "—"));
+      tr.appendChild(cell);
+    });
+
+    var cites = el("td", "col-cites num", fmtInt(metric(s, "citations_total")));
+    cites.dataset.f = "cites";
+    tr.appendChild(cites);
+    var hindex = el("td", "col-h num", fmtInt(metric(s, "h_index")));
+    hindex.dataset.f = "h";
+    tr.appendChild(hindex);
+    var share = el("td", "col-share num", fmtPct(metric(s, "domain_share")));
+    share.dataset.f = "share";
+    tr.appendChild(share);
+    var asset = el("td", "col-asset num", fmtInt(metric(s, "asset_citations")));
+    asset.dataset.f = "asset";
+    tr.appendChild(asset);
+
+    var latestCell = el("td", "col-latest");
+    if (s.latest_paper) {
+      var latest = s.latest_paper;
+      var line = el("div", "latest-y");
+      if (latest.venue) line.appendChild(el("span", "latest-venue", String(latest.venue)));
+      if (latest.year != null) line.appendChild(el("span", "latest-year", String(latest.year)));
+      if (latest.upcoming) line.appendChild(el("span", "latest-soon", "accepted"));
+      latestCell.appendChild(line);
+      var title = el("div", "latest-t", latest.title || "（无标题）");
+      latestCell.appendChild(title);
+      latestCell.title = [latest.title, latest.venue, latest.year].filter(Boolean).join(" · ");
+    } else {
+      latestCell.textContent = "—";
+    }
+    tr.appendChild(latestCell);
+
+    var confCell = el("td", "col-conf");
+    var label = CONF_LABELS[s.confidence] || "—";
+    if (s.confidence === "low") label = "样本不足";
+    var chip = el("span", "conf conf-" + (s.confidence || "none"), label);
+    if (s.confidence) {
+      var works = metric(s, "works");
+      chip.title = "作品数 " + (works == null ? "—" : works) + "，按配置阈值判定";
+    }
+    confCell.appendChild(chip);
+    tr.appendChild(confCell);
+
+    var expandCell = el("td", "col-expand");
+    var button = el("button", "expand");
+    button.type = "button";
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-label", "展开 " + (s.name_zh || s.name || s.key) + " 的信号分解与代表作");
+    button.setAttribute("aria-controls", "detail-" + index);
+    button.appendChild(el("span", "chev", "▾"));
+    expandCell.appendChild(button);
+    tr.appendChild(expandCell);
+
+    return tr;
+  }
+
+  function refreshRow(entry) {
+    var s = entry.s;
+    var overall = state.board === "overall";
+    entry.row.querySelector(".rank").textContent = fmtInt(overall ? s.rank : s.rank_recent);
+    entry.row.querySelector(".score").textContent = fmt1(overall ? s.score : s.score_recent);
+    var bib = entry.row.querySelector('[data-f="bib"] .v');
+    var dom = entry.row.querySelector('[data-f="dom"] .v');
+    bib.textContent = fmt1(familyScore(s, "bibliometric"));
+    dom.textContent = fmt1(familyScore(s, "domain"));
+    bib.parentNode.title = overall ? "总榜文献计量分" : "近五年文献计量分";
+    dom.parentNode.title = overall ? "总榜领域分" : "近五年领域分";
+
+    var cites = entry.row.querySelector(".col-cites");
+    var hcell = entry.row.querySelector(".col-h");
+    var share = entry.row.querySelector(".col-share");
+    var asset = entry.row.querySelector(".col-asset");
+    if (cites) cites.textContent = fmtInt(metric(s, overall ? "citations_total" : "citations_recent"));
+    if (hcell) hcell.textContent = fmtInt(metric(s, overall ? "h_index" : "h_index_recent"));
+    if (share) share.textContent = fmtPct(metric(s, overall ? "domain_share" : "domain_share_recent"));
+    if (asset) asset.textContent = fmtInt(metric(s, "asset_citations"));
+  }
+
+  function updateColumnLabels() {
+    var overall = state.board === "overall";
+    var labels = {
+      "citations": overall ? "总引用" : "近五年引用",
+      "hindex": overall ? "h-index" : "近五年 h-index",
+      "share": overall ? "领域占比" : "近五年领域占比",
+      "asset": overall ? "资产被引" : "资产被引（累计）"
+    };
+    var headers = document.querySelectorAll(".lb thead th[data-sort]");
+    Array.prototype.forEach.call(headers, function (th) {
+      var label = labels[th.dataset.sort];
+      if (!label) return;
+      var button = th.querySelector("button");
+      if (button && button.firstChild && button.firstChild.nodeType === 3) {
+        button.firstChild.nodeValue = label;
+      }
+    });
+  }
+
+  // ------------------------------------------------------------------ 展开面板
+  function signalPanel(s, board, signals, title) {
+    var section = el("section", "sig-panel");
+    section.dataset.board = board;
+    var header = el("h4", null, title);
+    var names = signals ? Object.keys(signals) : [];
+    if (names.length) header.appendChild(el("span", "sub", "按权重排序"));
+    section.appendChild(header);
+
+    if (!names.length) {
+      section.appendChild(el("p", "muted", "该榜未提供信号分解。"));
+      return section;
+    }
+
+    var head = el("div", "sig-head");
+    ["信号", "百分位", "raw", "权重", "贡献"].forEach(function (text, i) {
+      var cell = el("span", i >= 2 ? "r" : null, text);
+      head.appendChild(cell);
+    });
+    section.appendChild(head);
+
+    names.sort(function (a, b) {
+      return (num(signals[b].weight) || 0) - (num(signals[a].weight) || 0);
+    }).forEach(function (name) {
+      var sig = signals[name] || {};
+      var line = el("div", "sig-line");
+
+      var nameCell = el("span", "sig-name");
+      nameCell.title = name;
+      nameCell.appendChild(el("i", "sw " + (sig.family === "domain" ? "sw-dom" : "sw-bib")));
+      nameCell.appendChild(el("span", null, SIGNAL_LABELS[name] || name));
+      line.appendChild(nameCell);
+
+      var bar = el("span", "sig-bar");
+      var track = el("span", "track");
+      var fill = el("i", "fill " + (sig.family === "domain" ? "dom" : "bib"));
+      var pct = num(sig.percentile);
+      fill.style.width = pct == null ? "0%" : (Math.max(0, Math.min(1, pct)) * 100) + "%";
+      track.appendChild(fill);
+      bar.appendChild(track);
+      bar.appendChild(el("span", "pct", pct == null ? "—" : pct.toFixed(2)));
+      line.appendChild(bar);
+
+      line.appendChild(el("span", "sig-num", fmtRaw(name, sig.raw)));
+      line.appendChild(el("span", "sig-num", fmt2(sig.weight)));
+      line.appendChild(el("span", "sig-num", fmt1(sig.contribution)));
+      section.appendChild(line);
+    });
+    return section;
+  }
+
+  function profileText(s) {
+    var parts = [];
+    var works = metric(s, "works");
+    var worksRecent = metric(s, "works_recent");
+    var mean = metric(s, "mean_citations");
+    var fls = metric(s, "first_last_share");
+    if (works != null) parts.push("论文 " + fmtInt(works) + " 篇");
+    if (worksRecent != null) parts.push("近五年 " + fmtInt(worksRecent) + " 篇");
+    if (mean != null) parts.push("篇均引用 " + fmt1(mean));
+    if (fls != null) parts.push("一作/通讯份额 " + fmtPct(fls));
+    return parts.join(" · ");
+  }
+
+  function paperItem(paper) {
+    var row = el("div", "paper");
+    row.appendChild(el("div", "t", paper.title || "（无标题）"));
+    row.appendChild(el("div", "cites", fmtInt(paper.citations) + " 次"));
+
+    var metaRow = el("div", "pmeta");
+    var bits = [];
+    if (paper.year != null) bits.push(String(paper.year));
+    if (paper.venue) bits.push(String(paper.venue));
+    if (paper.credit != null) bits.push("署名份额 " + fmt2(paper.credit));
+    bits.forEach(function (text, i) {
+      if (i) metaRow.appendChild(el("span", "dot", "·"));
+      metaRow.appendChild(el("span", null, text));
+    });
+    if (paper.tier && paper.tier !== "-") {
+      metaRow.appendChild(el("span", "tier", "CCF " + paper.tier));
+    }
+    if (paper.kind && paper.kind !== "paper") {
+      metaRow.appendChild(el("span", "kind", paper.kind));
+    }
+    if (paper.doi) {
+      var link = el("a", null, "DOI");
+      link.href = "https://doi.org/" + encodeURIComponent(paper.doi).replace(/%2F/gi, "/");
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.title = paper.doi;
+      metaRow.appendChild(link);
+    }
+    row.appendChild(metaRow);
+    return row;
+  }
+
+  function papersPanel(s) {
+    var section = el("section", "paper-panel");
+
+    if (s.latest_paper) {
+      var latest = el("div", "paper-latest");
+      var tag = el("div", "tag", s.latest_paper.upcoming ? "最近一篇 · 已录用" : "最近一篇");
+      latest.appendChild(tag);
+      latest.appendChild(paperItem(s.latest_paper));
+      section.appendChild(latest);
+    }
+
+    var papers = s.recent_top_papers || [];
+    var header = el("h4", null, "近五年代表作");
+    header.appendChild(el("span", "sub",
+      papers.length ? "按会场等级与引用排序，至多 " + papers.length + " 篇" : "暂无收录"));
+    section.appendChild(header);
+
+    if (!papers.length) {
+      section.appendChild(el("p", "muted", "近五年暂无可展示的代表作。"));
+    } else {
+      papers.forEach(function (paper) { section.appendChild(paperItem(paper)); });
+    }
+
+    var profile = profileText(s);
+    if (profile) section.appendChild(el("p", "profile", profile));
+    return section;
+  }
+
+  function buildDetail(s, index) {
+    var tr = el("tr", "detail-row");
+    tr.id = "detail-" + index;
+    tr.hidden = true;
+    var td = el("td", "detail-cell");
+    td.colSpan = 12;
+    var inner = el("div", "detail-inner");
+    var grid = el("div", "detail-grid");
+    grid.appendChild(signalPanel(s, "overall", s.signals, "总榜信号分解"));
+    grid.appendChild(signalPanel(s, "recent", s.signals_recent, "近五年活跃榜信号分解"));
+    grid.appendChild(papersPanel(s));
+    inner.appendChild(grid);
+    td.appendChild(inner);
+    tr.appendChild(td);
+    return tr;
+  }
+
+  function toggleDetail(entry) {
+    var open = entry.detail.hidden;
+    entry.detail.hidden = !open;
+    var button = entry.row.querySelector(".expand");
+    if (button) button.setAttribute("aria-expanded", String(open));
+    entry.row.classList.toggle("is-open", open);
+  }
+
+  // ------------------------------------------------------------------ 方法面板
+  function buildWeights(board, table) {
+    var body = table.querySelector("tbody");
+    var spec = (meta.signals && meta.signals[board]) || {};
+    var names = Object.keys(spec);
+    body.textContent = "";
+    names.sort(function (a, b) { return (spec[b].weight || 0) - (spec[a].weight || 0); }).forEach(function (name) {
+      var item = spec[name];
+      var tr = document.createElement("tr");
+      var tdName = el("td", "sig-label", SIGNAL_LABELS[name] || name);
+      tdName.appendChild(el("code", "sig-key", name));
+      tr.appendChild(tdName);
+      var fam = el("td", "fam");
+      fam.appendChild(el("i", "sw " + (item.family === "domain" ? "sw-dom" : "sw-bib")));
+      fam.appendChild(document.createTextNode(FAMILY_LABELS[item.family] || item.family || "—"));
+      tr.appendChild(fam);
+      tr.appendChild(el("td", null, TRANSFORM_LABELS[item.transform] || item.transform || "—"));
+      tr.appendChild(el("td", "w", fmt2(item.weight)));
+      body.appendChild(tr);
+    });
+    var total = el("tr", "total");
+    total.appendChild(el("td", null, "合计"));
+    total.appendChild(el("td", null, ""));
+    total.appendChild(el("td", null, ""));
+    var sum = names.reduce(function (acc, name) { return acc + (num(spec[name].weight) || 0); }, 0);
+    total.appendChild(el("td", "w", fmt2(sum)));
+    body.appendChild(total);
+  }
+
+  function fillNotes() {
+    var conf = meta.confidence || {};
+    var auth = meta.authorship || {};
+    var norm = meta.normalization || {};
+    var window = meta.recent_window || [];
+    var windowText = window.length === 2 ? window[0] + "–" + window[1] + "（含端点）" : "—";
+
+    var normEl = document.getElementById("note-normalization");
+    if (normEl) {
+      normEl.textContent = "信号先按配置做变换（log1p / sqrt / identity），再取池内百分位。"
+        + (norm.method === "max_rank" ? "max_rank 口径：严格小于该值的样本数，加上并列样本数的一半，除以候选池人数；并列者同分。" : "")
+        + (norm.ties === "average" ? "并列取平均。" : "");
+    }
+    var windowEl = document.getElementById("note-window");
+    if (windowEl) windowEl.textContent = "近五年指 " + windowText + "，按论文发表年份计。";
+    var confEl = document.getElementById("note-confidence");
+    if (confEl) {
+      confEl.textContent = "作品数 ≥ " + (conf.high_min_works == null ? "—" : conf.high_min_works) + " 为高，≥ "
+        + (conf.medium_min_works == null ? "—" : conf.medium_min_works) + " 为中，低于 "
+        + (conf.medium_min_works == null ? "—" : conf.medium_min_works) + " 为低（样本不足）；只提示样本量，不改变分数。";
+    }
+    var authEl = document.getElementById("note-authorship");
+    if (authEl) {
+      authEl.textContent = "单作者 1.0；双作者一作 " + fmt2(auth.first_share_two) + "、末位 " + fmt2(1 - (auth.first_share_two || 0))
+        + "；三作者及以上一作 " + fmt2(auth.first_share) + "、末位 " + fmt2(auth.last_share) + "、其余平分 "
+        + fmt2(auth.middle_pool) + "。引用与篇数都按此折算。";
+    }
+
+    var sourcesEl = document.getElementById("sources");
+    if (sourcesEl) {
+      var sources = meta.sources || {};
+      var labels = { openalex: "OpenAlex", dblp: "DBLP", semantic_scholar: "Semantic Scholar" };
+      var texts = ["openalex", "dblp", "semantic_scholar"].map(function (key) {
+        return labels[key] + " " + statusText(sources[key]);
+      });
+      sourcesEl.textContent = texts.join(" · ");
+    }
+    var generatedEl = document.getElementById("generated");
+    if (generatedEl && meta.generated_at) generatedEl.textContent = meta.generated_at.replace("T", " ").slice(0, 16);
+    var hashEl = document.getElementById("hash");
+    if (hashEl) hashEl.textContent = meta.config_hash || "—";
+    var disclaimerEl = document.getElementById("disclaimer");
+    if (disclaimerEl) disclaimerEl.textContent = meta.disclaimer || "仅用于领域观察与自我校准，不作为招聘、晋升、考核等人事决策依据。";
+  }
+
+  function statusText(value) {
+    if (!value) return "—";
+    var text = String(value);
+    if (text === "ok") return "正常";
+    if (text === "pending") return "未就绪";
+    if (text.indexOf("local:") === 0) return "本地固定题录";
+    if (text.indexOf("skipped") === 0) return "已跳过" + (text.indexOf(":") !== -1 ? "（" + text.slice(text.indexOf(":") + 1).trim() + "）" : "");
+    if (text.indexOf("error") === 0) return "异常" + (text.indexOf(":") !== -1 ? "（" + text.slice(text.indexOf(":") + 1).trim() + "）" : "");
+    return text;
+  }
+
+  // ------------------------------------------------------------------ 应用状态
+  function matches(s, query) {
+    if (!query) return true;
+    var haystack = [s.name, s.name_zh, s.affiliation, s.key];
+    for (var i = 0; i < haystack.length; i += 1) {
+      if (haystack[i] && String(haystack[i]).toLowerCase().indexOf(query) !== -1) return true;
+    }
+    return false;
+  }
+
+  function updateHeaders() {
+    var headers = document.querySelectorAll(".lb thead th[data-sort]");
+    Array.prototype.forEach.call(headers, function (th) {
+      var active = th.dataset.sort === state.key;
+      th.setAttribute("aria-sort", active ? (state.dir === "asc" ? "ascending" : "descending") : "none");
+      var arrow = th.querySelector(".arrow");
+      if (arrow) arrow.textContent = active ? (state.dir === "asc" ? "↑" : "↓") : "↕";
+    });
+  }
+
+  function apply() {
+    var query = state.query.trim().toLowerCase();
+    var visible = registry.filter(function (entry) { return matches(entry.s, query); });
+    visible.sort(function (a, b) { return compare(a.s, b.s); });
+
+    var fragment = document.createDocumentFragment();
+    visible.forEach(function (entry) {
+      fragment.appendChild(entry.row);
+      fragment.appendChild(entry.detail);
+    });
+    // 先清空再整体放回：被过滤掉的行必须离开 DOM，否则会留在原位。
+    tbody.textContent = "";
+    tbody.appendChild(fragment);
+
+    var total = registry.length;
+    countEl.innerHTML = "";
+    countEl.appendChild(document.createTextNode("显示 "));
+    var strong = el("b", null, String(visible.length));
+    countEl.appendChild(strong);
+    countEl.appendChild(document.createTextNode(" / " + total + " 人"));
+
+    var isEmpty = visible.length === 0;
+    emptyEl.hidden = !isEmpty;
+    if (isEmpty) {
+      emptyEl.innerHTML = "";
+      emptyEl.appendChild(el("strong", null, total === 0 ? "候选池为空" : "没有匹配的学者"));
+      var emptyText;
+      if (total === 0) {
+        emptyText = "本次没有学者通过纳入门槛，或采集未产出可用记录。";
+      } else if (query) {
+        emptyText = "没有姓名或机构包含「" + state.query.trim() + "」的记录，试试英文名、中文名或机构名的一部分。";
+      } else {
+        emptyText = "清空搜索框可恢复全部结果。";
+      }
+      emptyEl.appendChild(document.createTextNode(emptyText));
+    }
+    updateHeaders();
+  }
+
+  function applyBoard() {
+    var overall = state.board === "overall";
+    document.body.dataset.board = state.board;
+    tabs.forEach(function (tab) {
+      var active = tab.dataset.board === state.board;
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+    });
+    var panel = document.getElementById("board-panel");
+    if (panel) panel.setAttribute("aria-labelledby", "tab-" + state.board);
+    noteEl.textContent = overall
+      ? "总榜：全生涯口径，排名、综合分与两族分值都按全部发表记录计算。"
+      : "近五年活跃榜：排名、综合分与两族分值都按 " + (meta.recent_window ? meta.recent_window[0] + "–" + meta.recent_window[1] : "近五年")
+        + " 年的论文计算，权重见方法摘要。";
+    registry.forEach(refreshRow);
+    updateColumnLabels();
+  }
+
+  function bindEvents() {
+    document.querySelectorAll(".lb thead th[data-sort]").forEach(function (th) {
+      th.querySelector("button").addEventListener("click", function () {
+        var key = th.dataset.sort;
+        if (state.key === key) {
+          state.dir = state.dir === "asc" ? "desc" : "asc";
+        } else {
+          state.key = key;
+          state.dir = (key === "name" || key === "affil" || key === "rank" || key === "confidence") ? "asc" : "desc";
+        }
+        apply();
+      });
+    });
+
+    tabs.forEach(function (tab, index) {
+      tab.addEventListener("click", function () {
+        if (state.board === tab.dataset.board) return;
+        state.board = tab.dataset.board;
+        state.key = "score";
+        state.dir = "desc";
+        applyBoard();
+        apply();
+      });
+      tab.addEventListener("keydown", function (event) {
+        if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+        event.preventDefault();
+        var next = (index + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+        tabs[next].focus();
+        tabs[next].click();
+      });
+    });
+
+    queryEl.addEventListener("input", function () {
+      state.query = queryEl.value;
+      apply();
+    });
+  }
+
+  function init() {
+    registry = scholars.map(function (s, index) {
+      var row = buildRow(s, index);
+      var detail = buildDetail(s, index);
+      row.addEventListener("click", function (event) {
+        if (event.target.closest("a")) return;
+        toggleDetail(registry[index]);
+      });
+      return { s: s, row: row, detail: detail, index: index };
+    });
+
+    applyBoard();
+    buildWeights("overall", document.getElementById("weights-overall"));
+    buildWeights("recent", document.getElementById("weights-recent"));
+    fillNotes();
+    bindEvents();
+    apply();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
